@@ -1,9 +1,26 @@
-import discord
+import os
 import random
+import json
+import discord
 
-TOKEN = 'OTk5NDIzODg0MTIwMDQ3NzE2.G68QHq.3MREpmimrSM4Tbln9lijLln2UZQSenXs6tw1nc'
+from discord.ext import commands
+from help_cog import help_cog
+from music_cog import music_cog
 
-client = discord.Client()
+f = open('../config.json')
+data = json.load(f)
+TOKEN = data["TOKEN"]
+f.close()
+
+bot = commands.Bot(command_prefix=".")
+
+bot.add_cog(help_cog(bot))
+bot.add_cog(music_cog(bot))
+
+bot.run(os.getenv(TOKEN))
+
+
+
 
 
 @client.event
