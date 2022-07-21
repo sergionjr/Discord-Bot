@@ -60,7 +60,7 @@ class music_cog(commands.Cog):
     @commands.command(name="play", aliases=["p", "playing"], help=".play (song) will search (song) on youtube and play the given URL")
     async def play(self, ctx, *args):
         query = " ".join(args)
-
+        print(query)
         voice_channel = ctx.author.voice.channel
         if voice_channel is None:
             await ctx.send("You must be connected to a voice channel!")
@@ -106,7 +106,7 @@ class music_cog(commands.Cog):
         retval = ""
 
         for i in range(0, len(self.music_queue)):
-            if (i>4): break
+            if i>4: break
             retval += self.music_queue[i][0]['title'] + '\n'
 
         if retval != "":
@@ -126,3 +126,16 @@ class music_cog(commands.Cog):
         self.is_playing = False
         self.is_paused = False
         await self.vc.disconnect()
+
+    @commands.command(name="mud", aliases=["x"], help="Classified")
+    async def mud(self, ctx):
+        query = ""
+        voice_channel = ctx.author.voice.channel
+        song = self.search_yt(query)
+        if type(song) == type(True):
+            await ctx.send("Could not download the song. Incorrect format, try a different keyword")
+        else:
+            await ctx.send("Song has been added to the queue")
+            self.music_queue.append([song, voice_channel])
+            if self.is_playing == False:
+                    await self.play_music(ctx)
