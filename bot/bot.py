@@ -18,6 +18,7 @@ bot.remove_command("help")
 
 bot.add_cog(help_cog(bot))
 bot.add_cog(music_cog(bot))
+bot.add_cog(alert_cog(bot))
 
 bot.run(TOKEN)
 

@@ -17,8 +17,8 @@ General commands:
 .clear - stops the music and clears the queue
 .quit - disconnects the bot from the voice channel
 .pause - pauses the current song being played or resumes if already paused
-.resume - resumes playing the current song                     
-                                
+.resume - resumes playing the current song                
+.mud - classified                               
 ```
 """
         self.text_channel_text = []
