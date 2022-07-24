@@ -6,6 +6,7 @@ import discord
 from discord.ext import commands
 from help_cog import help_cog
 from music_cog import music_cog
+from alert_cog import alert_cog
 
 f = open('./config.json')
 data = json.load(f)

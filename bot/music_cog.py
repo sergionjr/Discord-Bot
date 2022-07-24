@@ -71,7 +71,11 @@ class music_cog(commands.Cog):
             if type(song) == type(True):
                 await ctx.send("Could not download the song. Incorrect format, try a different keyword")
             else:
-                await ctx.send("Song has been added to the queue")
+                print(song)
+                print(type(ctx.author))
+                print(str(ctx.author))
+                song_added_message = str(ctx.author) + " has added the song " + song['title'] + " to queue."
+                await ctx.send(song_added_message)
                 self.music_queue.append([song, voice_channel])
 
                 if self.is_playing == False:
@@ -127,15 +131,3 @@ class music_cog(commands.Cog):
         self.is_paused = False
         await self.vc.disconnect()
 
-    @commands.command(name="mud", aliases=["x"], help="Classified")
-    async def mud(self, ctx):
-        query = ""
-        voice_channel = ctx.author.voice.channel
-        song = self.search_yt(query)
-        if type(song) == type(True):
-            await ctx.send("Could not download the song. Incorrect format, try a different keyword")
-        else:
-            await ctx.send("Song has been added to the queue")
-            self.music_queue.append([song, voice_channel])
-            if self.is_playing == False:
-                    await self.play_music(ctx)
