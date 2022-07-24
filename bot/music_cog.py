@@ -21,6 +21,7 @@ class music_cog(commands.Cog):
         with YoutubeDL(self.YDL_OPTIONS) as ydl:
             try:
                 info = ydl.extract_info("ytsearch:%s" % item, download=False)['entries'][0]
+                print(ydl.extract_info("ytsearch:%s" % item, download=False)['entries'][0])
             except Exception:
                 return False
         return {'source': info['formats'][0]['url'], 'title': info['title']}
@@ -46,7 +47,7 @@ class music_cog(commands.Cog):
                 self.vc = await self.music_queue[0][1].connect()
 
                 if self.vc == None:
-                    await ctx.send("Failed to join a voice channel")
+                    await ctx.send(":x: Failed to join a voice channel")
                     return
             else:
                 await self.vc.move_to(self.music_queue[0][1])
@@ -57,6 +58,7 @@ class music_cog(commands.Cog):
         else:
             self.is_playing = False
 
+
     @commands.command(name="play", aliases=["p", "playing"], help=".play (song) will search (song) on youtube and play the given URL")
     async def play(self, ctx, *args):
         query = " ".join(args)
@@ -65,16 +67,19 @@ class music_cog(commands.Cog):
         if voice_channel is None:
             await ctx.send("You must be connected to a voice channel!")
         elif self.is_paused:
+            await ctx.send(":play_pause: Resuming :thumbsup:")
             self.vc.resume()
         else:
+            await ctx.send(":musical_note: Searching :mag_right: `" + query + "`")
             song = self.search_yt(query)
             if type(song) == type(True):
-                await ctx.send("Could not download the song. Incorrect format, try a different keyword")
+                await ctx.send("Could not download the song. Incorrect format or no results. Try a different keyword")
             else:
-                print(song)
-                print(type(ctx.author))
-                print(str(ctx.author))
-                song_added_message = str(ctx.author) + " has added the song " + song['title'] + " to queue."
+                # print(song)
+                # print(type(ctx.author))
+                # print(str(ctx.author))
+                song_added_message = str(ctx.author) + " has added the song `" + song['title'] + "` to queue."
+
                 await ctx.send(song_added_message)
                 self.music_queue.append([song, voice_channel])
 
