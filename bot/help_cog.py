@@ -28,7 +28,7 @@ General commands:
             for channel in guild.text_channels:
                 self.text_channels.append(channel)
 
-        await self.send_to_first("Mud Cookie is **LIVE!!** " + self.version + self.help_message)
+  #      await self.send_to_first("Mud Cookie is **LIVE!!** " + self.version + self.help_message)
 
     async def send_to_first(self, msg):
         primary_channel = self.text_channels[0]

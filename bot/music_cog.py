@@ -38,9 +38,8 @@ class music_cog(commands.Cog):
         else:
             self.is_playing = False
 
-    def embed(self, ctx):
-        #print(ctx.author)
-        return
+
+
 
     async def play_music(self, ctx):
         if len(self.music_queue) > 0:
@@ -61,6 +60,17 @@ class music_cog(commands.Cog):
             self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next())
         else:
             self.is_playing = False
+
+    @commands.command(name="embed", aliases=["e"], help="embed test")
+    async def embed(self, ctx, *args):
+        embed = discord.Embed(title="Sample Embed",
+                              url="https://youtube.com",
+                              description="Initial sample test for embed",
+                              color=discord.Color.magenta())
+        embed.set_author(name=ctx.author.display_name,
+                         icon_url=ctx.author.avatar_url)
+
+        await ctx.send(embed=embed)
 
     @commands.command(name="play", aliases=["p", "playing"], help=".play (song) will search (song) on youtube and play the given URL")
     async def play(self, ctx, *args):
@@ -130,15 +140,17 @@ class music_cog(commands.Cog):
 
     @commands.command(name="queue", aliases=["q"], help="Displays all the songs currently in queue")
     async def queue(self, ctx):
-        retval = ""
+        song_list = ""
 
         for i in range(0, len(self.music_queue)):
             if i > 4:
                 break
-            retval += self.music_queue[i][0]['title'] + '\n'
+            song_list += str(i) + ". " + self.music_queue[i][0]['title'] + '\n'
+        print(song_list)
 
-        if retval != "":
-            await ctx.send(retval)
+        if song_list != "":
+            queue_message = "**" + song_list + "**"
+            await ctx.send(queue_message)
         else:
             await ctx.send("**:white_square_button: No music currently in the queue.**")
 
