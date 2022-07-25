@@ -8,10 +8,10 @@ from help_cog import help_cog
 from music_cog import music_cog
 from alert_cog import alert_cog
 
-f = open('./config.json')
-data = json.load(f)
-TOKEN = data["TOKEN"]
-f.close()
+#f = open('./config.json')
+#data = json.load(f)
+#TOKEN = data["TOKEN"]
+#f.close()
 #
 bot = commands.Bot(command_prefix=".")
 
