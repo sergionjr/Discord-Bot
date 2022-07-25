@@ -13,7 +13,6 @@ from alert_cog import alert_cog
 #TOKEN = data["TOKEN"]
 #f.close()
 TOKEN = os.environ['TOKEN']
-print(TOKEN)
 
 bot = commands.Bot(command_prefix=".")
 
