@@ -11,14 +11,13 @@ class help_cog(commands.Cog):
 ```
 General commands:
 .help - displays all the available commands
-.p <keywords> - finds the song on youtube and plays it in current channel
-.q  - displays the current music queue
+.play (or .p) <keywords> - finds the song on youtube and plays it in current channel
+.queue (or .q)  - displays the current music queue
 .skip - skips the current song being played
 .clear - stops the music and clears the queue
-.quit - disconnects the bot from the voice channel
+.quit (or .stop) - disconnects the bot from the voice channel
 .pause - pauses the current song being played or resumes if already paused
-.resume - resumes playing the current song                
-.mud - CLASSIFIED                             
+.resume - resumes playing the current song                  
 ```
 """
         self.text_channels = []

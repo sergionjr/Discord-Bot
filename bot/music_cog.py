@@ -12,8 +12,8 @@ class music_cog(commands.Cog):
         self.is_paused = False
 
         self.music_queue = []
-        self.YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'True'}
-        self.FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
+        self.YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'True', 'verbose':'true'}
+        self.FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn -err_detect ignore_err'}
 
         self.vc = None
 
@@ -51,7 +51,7 @@ class music_cog(commands.Cog):
                 self.vc = await self.music_queue[0][1].connect()
 
                 if self.vc == None:
-                    await ctx.send(":x: Failed to join a voice channel")
+                    await ctx.send("**:x: Failed to join a voice channel**")
                     return
             else:
                 await self.vc.move_to(self.music_queue[0][1])
@@ -73,8 +73,8 @@ class music_cog(commands.Cog):
             await ctx.send(message)
         elif self.is_paused:
             message = "**:play_pause: Resuming :thumbsup:**"
-            await ctx.send(message)
             self.vc.resume()
+            await ctx.send(message)
         else:
             searching_message = "**:musical_note: Searching :mag_right:** `" + query + "`"
             await ctx.send(searching_message)
@@ -105,26 +105,35 @@ class music_cog(commands.Cog):
     @commands.command(name="pause", help=".pause (song) will pause the current song being played")
     async def pause(self, ctx, *args):
         if self.is_playing:
+            message = "**:pause_button: Current song has been paused.**"
             self.is_playing = False
             self.is_paused = True
             self.vc.pause()
+            await ctx.send(message)
         elif self.is_paused:
+            message = "**:play_pause: Current song has been un-paused.**"
             self.is_playing = True
             self.is_paused = False
             self.vc.resume()
+            await ctx.send(message)
 
     @commands.command(name="resume", aliases=["r"], help="Resumes playing the current song")
     async def resume(self, ctx, *args):
         if self.is_paused:
+            message = "**:play_pause: Current song has been resumed.**"
             self.is_playing = True
             self.is_paused = False
             self.vc.resume()
+            await ctx.send(message)
 
     @commands.command(name="skip", aliases=["s"], help="Skips the currently played song")
     async def skip(self, ctx, *args):
         if (self.vc != None) and (self.vc):
+            message = "**:fast_forward: Song has been skipped**"
             self.vc.stop()
             await self.play_music(ctx)
+            await ctx.send(message)
+
 
     @commands.command(name="queue", aliases=["q"], help="Displays all the songs currently in queue")
     async def queue(self, ctx):
@@ -137,18 +146,20 @@ class music_cog(commands.Cog):
         if retval != "":
             await ctx.send(retval)
         else:
-            await ctx.send("No music currently in the queue.")
+            await ctx.send("**:white_square_button: No music currently in the queue.**")
 
     @commands.command(name="clear", help="Stops the current song and clears the queue")
     async def clear(self, ctx, *args):
         if (self.vc != None) and (self.is_playing):
             self.vc.stop()
         self.music_queue = []
-        await ctx.send("Music queue has been cleared")
+        await ctx.send("**:white_check_mark: Music queue has been cleared**")
 
-    @commands.command(name="quit", help="Kicks the bot from the voice channel")
+    @commands.command(name="quit", aliases=["stop"], help="Kicks the bot from the voice channel")
     async def leave(self, ctx):
         self.is_playing = False
         self.is_paused = False
+        quit_message = "**Disconnected Successfully. Until next time friend :eye: :lips: :eye: **"
         await self.vc.disconnect()
+        await ctx.send()
 
