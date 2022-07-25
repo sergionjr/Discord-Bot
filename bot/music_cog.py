@@ -41,9 +41,6 @@ class music_cog(commands.Cog):
         else:
             self.is_playing = False
 
-
-
-
     async def play_music(self, ctx):
         if len(self.music_queue) > 0:
             self.is_playing = True
