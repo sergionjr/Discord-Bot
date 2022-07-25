@@ -21,10 +21,10 @@ class music_cog(commands.Cog):
         with YoutubeDL(self.YDL_OPTIONS) as ydl:
             try:
                 info = ydl.extract_info("ytsearch:%s" % item, download=False)['entries'][0]
-                #print(ydl.extract_info("ytsearch:%s" % item, download=False)['entries'][0])
+                print(ydl.extract_info("ytsearch:%s" % item, download=False)['entries'][0])
             except Exception:
                 return False
-        return {'source': info['formats'][0]['url'], 'title': info['title']}
+        return {'source': info['formats'][0]['url'], 'title': info['title']} ## << ADD MORE TO SOURCE DICT FOR YOUTUBE DATA
 
     def play_next(self):
         if len(self.music_queue) > 0:
@@ -62,14 +62,15 @@ class music_cog(commands.Cog):
             self.is_playing = False
 
     @commands.command(name="embed", aliases=["e"], help="embed test")
-    async def embed(self, ctx, *args):
+    async def embed(self, ctx, song_info):
         embed = discord.Embed(title="Sample Embed",
                               url="https://youtube.com",
-                              description="Initial sample test for embed",
+                              description="Song has been added to queue",
                               color=discord.Color.magenta())
         embed.set_author(name=ctx.author.display_name,
                          icon_url=ctx.author.avatar_url)
-
+        print(song_info)
+        #embed.set_thumbnail(url=)
         await ctx.send(embed=embed)
 
     @commands.command(name="play", aliases=["p", "playing"], help=".play (song) will search (song) on youtube and play the given URL")
@@ -90,6 +91,7 @@ class music_cog(commands.Cog):
             searching_message = "**:musical_note: Searching :mag_right:** `" + query + "`"
             await ctx.send(searching_message)
             song = self.search_yt(query)
+            print(song)
 
             if type(song) == type(True):
                 await ctx.send("**Could not download the song. Try a different keyword**")
@@ -104,6 +106,7 @@ class music_cog(commands.Cog):
                 else:
                     message_addedtoqueue = "** " + str(ctx.author) + " has added the song `" + song['title'] + "` to queue.**"
                     await ctx.send(message_addedtoqueue)
+                    await self.embed(ctx, song)
 
     @commands.command(name="pause", help=".pause (song) will pause the current song being played")
     async def pause(self, ctx, *args):
@@ -143,9 +146,9 @@ class music_cog(commands.Cog):
         song_list = ""
 
         for i in range(0, len(self.music_queue)):
-            if i > 4:
+            if i > 7:
                 break
-            song_list += str(i) + ". " + self.music_queue[i][0]['title'] + '\n'
+            song_list += str(i+1) + ". " + self.music_queue[i][0]['title'] + '\n'
         print(song_list)
 
         if song_list != "":
