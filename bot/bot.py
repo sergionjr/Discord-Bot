@@ -12,7 +12,9 @@ from alert_cog import alert_cog
 #data = json.load(f)
 #TOKEN = data["TOKEN"]
 #f.close()
-#
+TOKEN = os.environ['DEVELOPMENT_TOKEN']
+print(TOKEN)
+
 bot = commands.Bot(command_prefix=".")
 
 bot.remove_command("help")
