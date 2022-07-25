@@ -24,7 +24,10 @@ class music_cog(commands.Cog):
                 print(ydl.extract_info("ytsearch:%s" % item, download=False)['entries'][0])
             except Exception:
                 return False
-        return {'source': info['formats'][0]['url'], 'title': info['title']} ## << ADD MORE TO SOURCE DICT FOR YOUTUBE DATA
+        return {'channel':info['channel'],'title': info['title'], 'id': info['id'], 'song_duration':info['duration'], 'source': info['formats'][0]['url']}
+
+    ## << ADD MORE TO SOURCE DICT FOR YOUTUBE DATA
+    # other dict entries... ['channel_url'], ['duration']
 
     def play_next(self):
         if len(self.music_queue) > 0:
@@ -62,13 +65,24 @@ class music_cog(commands.Cog):
             self.is_playing = False
 
     @commands.command(name="embed", aliases=["e"], help="embed test")
-    async def embed(self, ctx, song_info):
-        embed = discord.Embed(title="Sample Embed",
-                              url="https://youtube.com",
-                              description="Song has been added to queue",
-                              color=discord.Color.magenta())
+    async def embed_youtube(self, ctx, song_info):
+        ## example thumbnail: https://img.youtube.com/vi/dMNBjH--74w/mqdefault.jpg
+        yt_video_id = song_info['id']
+        yt_video_link = "https://www.youtube.com/watch?v=" + yt_video_id
+        link_yt_thumbnail = "https://img.youtube.com/vi/" + yt_video_id + "/mqdefault.jpg"
+        minutes, seconds = divmod(song_info['song_duration'], 60)
+        song_duration = str(minutes) + ":" + str(seconds)
+        ## input: 150 seconds
+        ## output: 2:30
+        embed = discord.Embed(title=song_info['title'],
+                              url=yt_video_link,
+                              color=discord.Color.dark_purple())
         embed.set_author(name=ctx.author.display_name,
                          icon_url=ctx.author.avatar_url)
+        embed.set_thumbnail(url=link_yt_thumbnail)
+        embed.add_field(name="Channel", value=song_info['channel'])
+        embed.add_field(name="Song Duration", value=song_duration)
+        embed.set_footer(text="Song has been added to the queue.")
         print(song_info)
         #embed.set_thumbnail(url=)
         await ctx.send(embed=embed)
@@ -106,7 +120,7 @@ class music_cog(commands.Cog):
                 else:
                     message_addedtoqueue = "** " + str(ctx.author) + " has added the song `" + song['title'] + "` to queue.**"
                     await ctx.send(message_addedtoqueue)
-                    await self.embed(ctx, song)
+                    await self.embed_youtube(ctx, song)
 
     @commands.command(name="pause", help=".pause (song) will pause the current song being played")
     async def pause(self, ctx, *args):
