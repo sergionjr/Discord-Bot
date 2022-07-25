@@ -21,7 +21,7 @@ class music_cog(commands.Cog):
         with YoutubeDL(self.YDL_OPTIONS) as ydl:
             try:
                 info = ydl.extract_info("ytsearch:%s" % item, download=False)['entries'][0]
-                print(ydl.extract_info("ytsearch:%s" % item, download=False)['entries'][0])
+                #print(ydl.extract_info("ytsearch:%s" % item, download=False)['entries'][0])
             except Exception:
                 return False
         return {'source': info['formats'][0]['url'], 'title': info['title']}
@@ -39,7 +39,7 @@ class music_cog(commands.Cog):
             self.is_playing = False
 
     def embed(self, ctx):
-        print(ctx.author)
+        #print(ctx.author)
         return
 
     async def play_music(self, ctx):
@@ -65,7 +65,7 @@ class music_cog(commands.Cog):
     @commands.command(name="play", aliases=["p", "playing"], help=".play (song) will search (song) on youtube and play the given URL")
     async def play(self, ctx, *args):
         query = " ".join(args)
-        print(query)
+        #print(query)
         voice_channel = ctx.author.voice.channel
         if voice_channel is None:
             message_notconnected = "**:X: You must be connected to a voice channel!**"
