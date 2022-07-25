@@ -14,8 +14,8 @@ from alert_cog import alert_cog
 #TOKEN = data["TOKEN"]
 #f.close()
 
-TOKEN = os.environ['DEVELOPMENT_TOKEN']
-print(TOKEN)
+TOKEN = os.environ['TOKEN']
+#print(TOKEN)
 #print("User's Environment variable:")
 #pprint.pprint(dict(TOKEN), width = 1)
 #TOKEN = os.environ

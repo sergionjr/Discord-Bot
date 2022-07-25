@@ -21,7 +21,7 @@ class music_cog(commands.Cog):
         with YoutubeDL(self.YDL_OPTIONS) as ydl:
             try:
                 info = ydl.extract_info("ytsearch:%s" % item, download=False)['entries'][0]
-                print(ydl.extract_info("ytsearch:%s" % item, download=False)['entries'][0])
+                #print(ydl.extract_info("ytsearch:%s" % item, download=False)['entries'][0])
             except Exception:
                 return False
         return {'channel':info['channel'],'title': info['title'], 'id': info['id'], 'song_duration':info['duration'], 'source': info['formats'][0]['url']}
@@ -83,7 +83,7 @@ class music_cog(commands.Cog):
         embed.add_field(name="Channel", value=song_info['channel'])
         embed.add_field(name="Song Duration", value=song_duration)
         embed.set_footer(text="Song has been added to the queue.")
-        print(song_info)
+        #print(song_info)
         #embed.set_thumbnail(url=)
         await ctx.send(embed=embed)
 
@@ -105,7 +105,7 @@ class music_cog(commands.Cog):
             searching_message = "**:musical_note: Searching :mag_right:** `" + query + "`"
             await ctx.send(searching_message)
             song = self.search_yt(query)
-            print(song)
+            #print(song)
 
             if type(song) == type(True):
                 await ctx.send("**Could not download the song. Try a different keyword**")
@@ -163,7 +163,7 @@ class music_cog(commands.Cog):
             if i > 7:
                 break
             song_list += str(i+1) + ". " + self.music_queue[i][0]['title'] + '\n'
-        print(song_list)
+        #print(song_list)
 
         if song_list != "":
             queue_message = "**" + song_list + "**"

@@ -5,7 +5,15 @@ from discord.ext import commands
 class help_cog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.version = '(1.0.0)'
+        self.version = '(1.1)'
+        self.update_message = """
+        ```
+        mudbot is **LIVE!!** 
+        (1.1.0): Added embed for song query when adding a song to a queue >1 in size. (thumbnail, song duration, video uploader, video link, discord user who requested.)
+        (1.0.0): Official release and command integration: `help, play, queue, skip, clear, quit, pause, resume`
+        
+        ```
+        """
         self.help_message = """    
 ```
 General commands:
@@ -28,7 +36,7 @@ General commands:
             for channel in guild.text_channels:
                 self.text_channels.append(channel)
 
-  #      await self.send_to_first("Mud Cookie is **LIVE!!** " + self.version + self.help_message)
+        await self.send_to_first("Mud Cookie is **LIVE!!** " + self.version + self.help_message)
 
     async def send_to_first(self, msg):
         primary_channel = self.text_channels[0]
