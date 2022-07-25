@@ -38,6 +38,10 @@ class music_cog(commands.Cog):
         else:
             self.is_playing = False
 
+    def embed(self, ctx):
+        print(ctx.author)
+        return
+
     async def play_music(self, ctx):
         if len(self.music_queue) > 0:
             self.is_playing = True
@@ -65,26 +69,38 @@ class music_cog(commands.Cog):
         print(query)
         voice_channel = ctx.author.voice.channel
         if voice_channel is None:
-            await ctx.send("You must be connected to a voice channel!")
+            message = "**:X: You must be connected to a voice channel!**"
+            await ctx.send(message)
         elif self.is_paused:
-            await ctx.send(":play_pause: Resuming :thumbsup:")
+            message = "**:play_pause: Resuming :thumbsup:**"
+            await ctx.send(message)
             self.vc.resume()
         else:
-            await ctx.send(":musical_note: Searching :mag_right: `" + query + "`")
+            searching_message = "**:musical_note: Searching :mag_right:** `" + query + "`"
+            await ctx.send(searching_message)
             song = self.search_yt(query)
             if type(song) == type(True):
-                await ctx.send("Could not download the song. Incorrect format or no results. Try a different keyword")
+                await ctx.send("**Could not download the song. Try a different keyword**")
             else:
-                # print(song)
-                # print(type(ctx.author))
-                # print(str(ctx.author))
-                song_added_message = str(ctx.author) + " has added the song `" + song['title'] + "` to queue."
-
-                await ctx.send(song_added_message)
                 self.music_queue.append([song, voice_channel])
-
                 if self.is_playing == False:
+                    message = "**Playing :notes: `" + song['title'] + "` - Now!**"
+                    await ctx.send(message)
                     await self.play_music(ctx)
+                else:
+                    message = "** " + str(ctx.author) + " has added the song `" + song['title'] + "` to queue.**"
+                    await ctx.send(message)
+
+
+                #if self.is_playing == False:
+                #    await ctx.send("")
+                # song_added_message = "** " + str(ctx.author) + " has added the song `" + song['title'] + "` to queue.**"
+                #
+                # await ctx.send(song_added_message)
+                # self.music_queue.append([song, voice_channel])
+                #
+                # if self.is_playing == False:
+                #     await self.play_music(ctx)
 
     @commands.command(name="pause", help=".pause (song) will pause the current song being played")
     async def pause(self, ctx, *args):
