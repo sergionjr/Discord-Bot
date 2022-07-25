@@ -12,7 +12,7 @@ f = open('./config.json')
 data = json.load(f)
 TOKEN = data["TOKEN"]
 f.close()
-
+#
 bot = commands.Bot(command_prefix=".")
 
 bot.remove_command("help")
@@ -23,30 +23,20 @@ bot.add_cog(alert_cog(bot))
 
 bot.run(TOKEN)
 
+"""
+    Note on Software Versioning:
+    [major].[minor].[release].[build]
+    
+    major: Really a marketing decision. Are you ready to call the version 1.0? Does the company consider this a major version for which customers might have to pay more, or is it an update of the current major version which may be free? Less of an R&D decision and more a product decision.
 
+    minor: Starts from 0 whenever major is incremented. +1 for every version that goes public.
+    
+    release: Every time you hit a development milestone and release the product, even internally (e.g. to QA), increment this. This is especially important for communication between teams in the organization. Needless to say, never release the same 'release' twice (even internally). Reset to 0 upon minor++ or major++.
+    
+    build: Can be a SVN revision, I find that works best.
+    
+    Examples:
+    My current chrome: 83.0.4103.61
 
-
-
-# @client.event
-# async def on_ready():
-#     print('We have logged in as {0.user}'.format(client))
-#
-#
-# @client.event
-# async def on_message(message):
-#     print(message)
-#     user_name = str(message.author)
-#     user_message = str(message.content)
-#     channel = str(message.channel.name)
-#     print("New Message:", user_message, "From:", user_name, "At:", message.created_at, "In Channel:", channel)
-#
-#     if message.author == client.user:
-#         return
-#     if user_message.lower() == '.hello':
-#         await message.channel.send("Hello " + user_name)
-#         return
-#     elif user_message.lower() == '.random':
-#         await message.channel.send("Here is your random number:" + str(random.randint(1, 100)))
-#         return
-#
-# client.run(TOKEN)
+..source: https://stackoverflow.com/questions/615227/how-to-do-version-numbers
+"""
