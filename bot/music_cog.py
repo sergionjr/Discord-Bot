@@ -118,7 +118,7 @@ class music_cog(commands.Cog):
                     await self.play_music(ctx)
 
                 else:
-                    message_addedtoqueue = "** " + str(ctx.author) + " has added the song `" + song['title'] + "` to queue.**"
+                    message_addedtoqueue = "** :white_check_mark: " + str(ctx.author) + " has added the song `" + song['title'] + "` to queue.**"
                     await ctx.send(message_addedtoqueue)
                     await self.embed_youtube(ctx, song)
 
