@@ -2,6 +2,7 @@ import os
 import random
 import json
 import discord
+import pprint
 
 from discord.ext import commands
 from help_cog import help_cog
@@ -12,8 +13,13 @@ from alert_cog import alert_cog
 #data = json.load(f)
 #TOKEN = data["TOKEN"]
 #f.close()
+
 TOKEN = os.environ['DEVELOPMENT_TOKEN']
 print(TOKEN)
+#print("User's Environment variable:")
+#pprint.pprint(dict(TOKEN), width = 1)
+#TOKEN = os.environ
+#print(os.environ)
 
 bot = commands.Bot(command_prefix=".")
 
