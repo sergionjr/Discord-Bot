@@ -4,7 +4,7 @@ MudBot was created primarily to be an assistant to my own discord needs. Discord
 so mudbot has aggregated the most simplistic features from the best bots into itself. Without a paywall separating the best bitrate, MudBot streams at the best quality,
 minimizes spam in your server, and is regularly updated to be the simple jack-of-all-trades that we cannot find.
 
-### Current Features
+### 🛠Current & Planned Features
 
 ✔ Music Cog (Using FFMPEG & YoutubeDL)
 
