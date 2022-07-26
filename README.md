@@ -6,9 +6,9 @@ minimizes spam in your server, and is regularly updated to be the simple jack-of
 
 ### 🛠Current & Planned Features
 
-✔ Music Cog (Using FFMPEG & YoutubeDL)
+- [X] Music Cog (Using FFMPEG & YoutubeDL)
 
-✔ Help Cog 
+- [X] Help Cog 
 
 - [ ] Reminders Cog (Create a reminder, recurring reminder)
 
