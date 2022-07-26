@@ -16,7 +16,7 @@ minimizes spam in your server, and is regularly updated to be the simple jack-of
 
 - [ ] Gimmicks Cog (Roll the die, play a game)
 
-### Current Commands
+### 📃Current Commands
 ```
 .help - displays all the available commands
 
@@ -34,3 +34,20 @@ minimizes spam in your server, and is regularly updated to be the simple jack-of
 
 .resume - resumes playing the current song                  
 ```
+
+### 🏃‍♂️How to run
+Download repository and install the required dependencies
+
+`pip install PyNaCl`
+
+`pip install ffmpeg-python`
+
+`pip install youtube_dl`
+
+`pip install discord.py`
+
+
+Then, plug in your bot token key in `TOKEN = <key>` in `bot.py`
+and run the `bot.py` script.
+
+
