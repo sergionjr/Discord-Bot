@@ -11,11 +11,17 @@ class music_cog(commands.Cog):
         self.is_playing = False
         self.is_paused = False
 
-        self.music_queue = []
+        self.music_dict = {}
+        #self.music_dict = []
         self.YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'True', 'verbose':'true'}
         self.FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn -err_detect ignore_err'}
 
         self.vc = None
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        for guild in self.bot.guilds:
+            self.music_dict[guild.id] = []
 
     def search_yt(self, item):
         with YoutubeDL(self.YDL_OPTIONS) as ydl:
@@ -29,15 +35,15 @@ class music_cog(commands.Cog):
     ## << ADD MORE TO SOURCE DICT FOR YOUTUBE DATA
     # other dict entries... ['channel_url'], ['duration']
 
-    def play_next(self):
-        if len(self.music_queue) > 0:
+    def play_next(self, ctx):
+        if len(self.music_dict[ctx.guild.id]) > 0:
             self.is_playing = True
 
-            m_url = self.music_queue[0][0]['source']
+            m_url = self.music_dict[ctx.guild.id][0][0]['source']
 
-            self.music_queue.pop(0)
+            self.music_dict[ctx.guild.id].pop(0)
 
-            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next())
+            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next(ctx))
         else:
             self.is_playing = False
 
@@ -45,22 +51,22 @@ class music_cog(commands.Cog):
 
 
     async def play_music(self, ctx):
-        if len(self.music_queue) > 0:
+        if len(self.music_dict[ctx.guild.id]) > 0:
             self.is_playing = True
-            m_url = self.music_queue[0][0]['source']
+            m_url = self.music_dict[ctx.guild.id][0][0]['source']
 
             if (self.vc == None) or not self.vc.is_connected():
-                self.vc = await self.music_queue[0][1].connect()
+                self.vc = await self.music_dict[ctx.guild.id][0][1].connect()
 
                 if self.vc == None:
                     await ctx.send("**:x: Failed to join a voice channel**")
                     return
             else:
-                await self.vc.move_to(self.music_queue[0][1])
+                await self.vc.move_to(self.music_dict[ctx.guild.id][0][1])
 
-            self.music_queue.pop(0)
+            self.music_dict[ctx.guild.id].pop(0)
 
-            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next())
+            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next(ctx))
         else:
             self.is_playing = False
 
@@ -111,7 +117,8 @@ class music_cog(commands.Cog):
                 await ctx.send("**Could not download the song. Try a different keyword**")
 
             else:
-                self.music_queue.append([song, voice_channel])
+                print(self.music_dict[ctx.guild.id])
+                self.music_dict[ctx.guild.id].append([song, voice_channel])
                 if self.is_playing == False:
                     message_nowplaying = "**Playing :notes: `" + song['title'] + "` - Now!**"
                     await ctx.send(message_nowplaying)
@@ -159,10 +166,10 @@ class music_cog(commands.Cog):
     async def queue(self, ctx):
         song_list = ""
 
-        for i in range(0, len(self.music_queue)):
+        for i in range(0, len(self.music_dict[ctx.guild.id])):
             if i > 7:
                 break
-            song_list += str(i+1) + ". " + self.music_queue[i][0]['title'] + '\n'
+            song_list += str(i+1) + ". " + self.music_dict[ctx.guild.id][i][0]['title'] + '\n'
         print(song_list)
 
         if song_list != "":
@@ -175,7 +182,7 @@ class music_cog(commands.Cog):
     async def clear(self, ctx, *args):
         if (self.vc != None) and (self.is_playing):
             self.vc.stop()
-        self.music_queue = []
+        self.music_dict[ctx.guild.id] = []
         message_clear = "**:white_check_mark: Music queue has been cleared**"
         await ctx.send(message_clear)
 
