@@ -9,17 +9,7 @@ from help_cog import help_cog
 from music_cog import music_cog
 from alert_cog import alert_cog
 
-#f = open('./config.json')
-#data = json.load(f)
-#TOKEN = data["TOKEN"]
-#f.close()
-
-TOKEN = os.environ['DEVELOPMENT_TOKEN']
-print(TOKEN)
-#print("User's Environment variable:")
-#pprint.pprint(dict(TOKEN), width = 1)
-#TOKEN = os.environ
-#print(os.environ)
+TOKEN = os.environ['TOKEN']
 
 bot = commands.Bot(command_prefix=".")
 
@@ -30,6 +20,13 @@ bot.add_cog(music_cog(bot))
 bot.add_cog(alert_cog(bot))
 
 bot.run(TOKEN)
+
+"""
+    mudbot is **LIVE!!** 
+    (1.1.0): Added embed for song query when adding a song to a queue >1 in size. (thumbnail, song duration, video uploader, video link, discord user who requested.)
+    (1.0.0): Official release and command integration: `help, play, queue, skip, clear, quit, pause, resume`
+
+"""
 
 """
     Note on Software Versioning:
