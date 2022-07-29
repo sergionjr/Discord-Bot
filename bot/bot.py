@@ -3,6 +3,7 @@ import random
 import json
 import discord
 import pprint
+import firebase_admin
 
 from discord.ext import commands
 from help_cog import help_cog
@@ -10,6 +11,11 @@ from music_cog import music_cog
 from reminder_cog import reminder_cog, reminder
 
 TOKEN = os.environ['DEVELOPMENT_TOKEN']
+
+class firebaseConnector:
+    _serviceAccountKey = json.loads(os.environ['serviceAccountKey'])
+    _cred = firebase_admin.credentials.Certificate(_serviceAccountKey)
+
 
 bot = commands.Bot(command_prefix=".")
 
