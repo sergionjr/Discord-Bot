@@ -7,7 +7,7 @@ import pprint
 from discord.ext import commands
 from help_cog import help_cog
 from music_cog import music_cog
-from alert_cog import alert_cog
+from reminder_cog import reminder_cog
 
 TOKEN = os.environ['TOKEN']
 
@@ -17,7 +17,7 @@ bot.remove_command("help")
 
 bot.add_cog(help_cog(bot))
 bot.add_cog(music_cog(bot))
-bot.add_cog(alert_cog(bot))
+bot.add_cog(reminder_cog(bot))
 
 bot.run(TOKEN)
 
