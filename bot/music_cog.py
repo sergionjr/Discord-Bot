@@ -8,8 +8,10 @@ class music_cog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-        self.is_playing = False
-        self.is_paused = False
+        self.is_playing = {}
+        self.is_paused = {}
+
+
 
         self.music_dict = {}
         #self.music_dict = []
@@ -22,6 +24,8 @@ class music_cog(commands.Cog):
     async def on_ready(self):
         for guild in self.bot.guilds:
             self.music_dict[guild.id] = []
+            self.is_playing[guild.id] = False
+            self.is_paused[guild.id]= False
 
     def search_yt(self, item):
         with YoutubeDL(self.YDL_OPTIONS) as ydl:
@@ -37,7 +41,7 @@ class music_cog(commands.Cog):
 
     def play_next(self, ctx):
         if len(self.music_dict[ctx.guild.id]) > 0:
-            self.is_playing = True
+            self.is_playing[ctx.guild.id] = True
 
             m_url = self.music_dict[ctx.guild.id][0][0]['source']
 
@@ -45,14 +49,14 @@ class music_cog(commands.Cog):
 
             self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next(ctx))
         else:
-            self.is_playing = False
+            self.is_playing[ctx.guild.id] = False
 
 
 
 
     async def play_music(self, ctx):
         if len(self.music_dict[ctx.guild.id]) > 0:
-            self.is_playing = True
+            self.is_playing[ctx.guild.id] = True
             m_url = self.music_dict[ctx.guild.id][0][0]['source']
 
             if (self.vc == None) or not self.vc.is_connected():
@@ -68,7 +72,7 @@ class music_cog(commands.Cog):
 
             self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next(ctx))
         else:
-            self.is_playing = False
+            self.is_playing[ctx.guild.id] = False
 
     @commands.command(name="embed", aliases=["e"], help="embed test")
     async def embed_youtube(self, ctx, song_info):
@@ -102,7 +106,7 @@ class music_cog(commands.Cog):
             message_notconnected = "**:X: You must be connected to a voice channel!**"
             await ctx.send(message_notconnected)
 
-        elif self.is_paused:
+        elif self.is_paused[ctx.guild.id]:
             message_resume = "**:play_pause: Resuming :thumbsup:**"
             self.vc.resume()
             await ctx.send(message_resume)
@@ -119,7 +123,7 @@ class music_cog(commands.Cog):
             else:
                 print(self.music_dict[ctx.guild.id])
                 self.music_dict[ctx.guild.id].append([song, voice_channel])
-                if self.is_playing == False:
+                if self.is_playing[ctx.guild.id] == False:
                     message_nowplaying = "**Playing :notes: `" + song['title'] + "` - Now!**"
                     await ctx.send(message_nowplaying)
                     await self.play_music(ctx)
@@ -131,25 +135,25 @@ class music_cog(commands.Cog):
 
     @commands.command(name="pause", help=".pause (song) will pause the current song being played")
     async def pause(self, ctx, *args):
-        if self.is_playing:
+        if self.is_playing[ctx.guild.id]:
             message_pause = "**:pause_button: Current song has been paused.**"
-            self.is_playing = False
-            self.is_paused = True
+            self.is_playing[ctx.guild.id] = False
+            self.is_paused[ctx.guild.id] = True
             self.vc.pause()
             await ctx.send(message_pause)
-        elif self.is_paused:
+        elif self.is_paused[ctx.guild.id]:
             message_unpause = "**:play_pause: Current song has been un-paused.**"
-            self.is_playing = True
-            self.is_paused = False
+            self.is_playing[ctx.guild.id] = True
+            self.is_paused[ctx.guild.id] = False
             self.vc.resume()
             await ctx.send(message_unpause)
 
     @commands.command(name="resume", aliases=["r"], help="Resumes playing the current song")
     async def resume(self, ctx, *args):
-        if self.is_paused:
+        if self.is_paused[ctx.guild.id]:
             message_resume = "**:play_pause: Current song has been resumed.**"
-            self.is_playing = True
-            self.is_paused = False
+            self.is_playing[ctx.guild.id] = True
+            self.is_paused[ctx.guild.id] = False
             self.vc.resume()
             await ctx.send(message_resume)
 
@@ -180,7 +184,7 @@ class music_cog(commands.Cog):
 
     @commands.command(name="clear", help="Stops the current song and clears the queue")
     async def clear(self, ctx, *args):
-        if (self.vc != None) and (self.is_playing):
+        if (self.vc != None) and (self.is_playing[ctx.guild.id]):
             self.vc.stop()
         self.music_dict[ctx.guild.id] = []
         message_clear = "**:white_check_mark: Music queue has been cleared**"
@@ -188,8 +192,8 @@ class music_cog(commands.Cog):
 
     @commands.command(name="quit", aliases=["stop"], help="Kicks the bot from the voice channel")
     async def leave(self, ctx):
-        self.is_playing = False
-        self.is_paused = False
+        self.is_playing[ctx.guild.id] = False
+        self.is_paused[ctx.guild.id] = False
         message_quit = "**Disconnected Successfully. Until next time friend :eye: :lips: :eye: **"
         await self.vc.disconnect()
         await ctx.send(message_quit)
