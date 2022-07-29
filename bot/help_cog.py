@@ -6,6 +6,7 @@ class help_cog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.version = '(1.1)'
+        self.text_channels = []
         self.help_message = """    
 ```
 General commands:
@@ -20,7 +21,7 @@ General commands:
 ```
 """
 
-        self.text_channels = []
+
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -28,7 +29,7 @@ General commands:
             for channel in guild.text_channels:
                 self.text_channels.append(channel)
 
-        await self.send_to_first("Mud Cookie is **LIVE!!** " + self.version + self.help_message)
+        #await self.send_to_first("Mud Cookie is **LIVE!!** " + self.version + self.help_message)
 
     async def send_to_first(self, msg):
         primary_channel = self.text_channels[0]

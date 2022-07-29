@@ -7,9 +7,9 @@ import pprint
 from discord.ext import commands
 from help_cog import help_cog
 from music_cog import music_cog
-from reminder_cog import reminder_cog
+from reminder_cog import reminder_cog, reminder
 
-TOKEN = os.environ['TOKEN']
+TOKEN = os.environ['DEVELOPMENT_TOKEN']
 
 bot = commands.Bot(command_prefix=".")
 

@@ -18,6 +18,13 @@ class reminder_cog(commands.Cog):
         self.bot = bot
         self.text_channel_text = []
 
-    @commands.command(name="remind", aliases=["e"], help="embed test")
-    async def reminder(self, ctx):
-        return
+    @commands.command(name="remind", aliases=["alert"], help="test test")
+
+    async def reminder(self, ctx, arg1):
+        print("1 arg reminder function", arg1)
+        await ctx.send(arg1)
+
+    @commands.command(name="remind", aliases=["alert"], help="test test")
+    async def reminder(self, ctx, arg1, arg2, arg3):
+        print("3 arg reminder function", arg1, arg2, arg3)
+
