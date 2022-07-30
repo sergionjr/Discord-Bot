@@ -12,7 +12,7 @@ from discord.ext import commands
 # Internal Imports
 from help_cog import help_cog
 from music_cog import music_cog
-from reminder_cog import reminder_cog, reminder
+from reminder_cog import reminder_cog
 
 
 TOKEN = os.environ['DEVELOPMENT_TOKEN']

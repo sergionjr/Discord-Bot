@@ -21,9 +21,18 @@ default_app = firebase_admin.initialize_app(cred, {
 
 ref = db.reference('/Database reference')
 
-dict_entry = json.loads("{ 'reminderID' : 'reminderEntry'}")
+dict_entry = """{
+"reminderID": "reminderEntry"
+}"""
+
+secondary_dict = {
+    'rockstar' : 'axel'
+}
+
+dict_entry = json.loads(dict_entry) #json loads must load a dictionary string. The triple quotes prep it.
 print(dict_entry)
-ref.push(dict_entry)
+print(type(dict_entry))
+ref.push(secondary_dict)
 
 print(ref.get())
 
