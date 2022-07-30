@@ -19,7 +19,7 @@ default_app = firebase_admin.initialize_app(cred, {
     'databaseURL': "https://mudbot-68f45-default-rtdb.firebaseio.com"
 })
 
-ref = db.reference('/Database reference')
+ref = db.reference('/Reminders (Test)')
 
 
 dict_entry = """{
@@ -27,8 +27,8 @@ dict_entry = """{
 }"""
 
 secondary_dict = {
-    'rockstar' : 'axel'
-    'userID'
+    'rockstar' : 'axel',
+    'userID' : '155232'
 }
 
 dict_entry = json.loads(dict_entry) #json loads must load a dictionary string. The triple quotes prep it.
@@ -39,12 +39,13 @@ print(ref.get())
 
 
 class reminder:
-    def __init__(self, reminder_id, server_id, user_ids, reminder, private, recurring, recurring_frequency):
+    def __init__(self, reminder_id, server_id, user_ids, reminder, private, reminder_date, recurring, recurring_frequency):
         self.reminder_id = reminder_id
         self.server_id = server_id
-        self.user_ids = user_ids
+        self.user_id = user_ids
         self.reminder = reminder
         self.private = private
+        self.reminder_date = reminder_date
         self.recurring = recurring #true or false
         self.recurring_frequency = recurring_frequency
 
@@ -55,19 +56,21 @@ class reminder_cog(commands.Cog):
         self.bot = bot
         self.text_channel_text = []
 
-    async def reminder_add(self, ctx):
+    async def reminder_new(self, ctx, *args):
         await ctx.send("reminder_add")
+        await ctx.send("Add a new reminder. Format: .remind new <description> <date (MM-DD-YYYY)> <recurring>")
+
         return
 
-    async def reminder_modify(self, ctx):
+    async def reminder_modify(self, ctx, *args):
         await ctx.send("reminder_modify")
         return
 
-    async def reminder_delete(self, ctx):
+    async def reminder_delete(self, ctx, *args):
         await ctx.send("reminder_delete")
         return
 
-    async def reminder_delete_all(self, ctx):
+    async def reminder_delete_all(self, ctx, *args):
         await ctx.send("reminder_delete_all")
         return
 
@@ -82,12 +85,12 @@ class reminder_cog(commands.Cog):
     @commands.command(name="remind", aliases=["alert"], help="test test")
     async def reminder(self, ctx, *args):
         reminder_operations = {
-            'add': self.reminder_add,
+            'add': self.reminder_new,
             'modify': self.reminder_modify,
             'delete': self.reminder_delete,
             'deleteall': self.reminder_delete_all
         }
-        await reminder_operations[args[0]](ctx)
+        await reminder_operations[args[0]](ctx, args)
 
         # await ctx.send("argument 1: " + args[0])
         # await ctx.send(args)
