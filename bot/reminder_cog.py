@@ -55,7 +55,7 @@ class reminder_exo:
         self.server_id = server_id
         self.user_id = user_id
 
-    def jsonify(self):
+    def reminder_dictionary(self):
         return {
             "reminder_id": self.reminder_id,
             "server_id": self.server_id,
@@ -110,10 +110,11 @@ class reminder_cog(commands.Cog):
 
     @commands.command(name="reminders", help="push a reminder to firebase")
     async def reminder_push(self, ctx, *args):
-        await ctx.send("Args provided:" + " ".join(args))
-        reminder_id, server_id, user_id = args
+        await ctx.send("Args provided:" + " ".join(args)) #simple readback
+
+        reminder_id, server_id, user_id = args #sets them in order of how they are in the args[] structure.
         new_reminder = reminder_exo(reminder_id, server_id, user_id)
-        ref.child("testkey1").set(new_reminder.jsonify())
+        ref.child("testkey1/reminder_id").set(new_reminder.jsonify())
         print(new_reminder)
 
     @commands.command(name="retrieve", help="filler")
