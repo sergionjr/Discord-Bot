@@ -90,7 +90,7 @@ class reminder_cog(commands.Cog):
 
     async def reminder_clear(self, ctx):
         try:
-            await ref.child(f"{ctx.author.id}/{ctx.guild.id}").delete()
+            ref.child(f"{ctx.author.id}/{ctx.guild.id}").delete()
             await ctx.send(f"{ctx.author.mention}: Your reminders have been cleared successfully.")
         except:
             await ctx.send(f"{ctx.author.mention}: Failed to clear your reminders")
@@ -112,14 +112,12 @@ class reminder_cog(commands.Cog):
             'delete': self.reminder_delete,
             'clear': self.reminder_clear
         }
-
         try:
             await reminder_operations[args[0]](ctx)
         except:
             await ctx.send(f"{ctx.message.author.mention}: Command not recognized.")
-
-        # await ctx.send("argument 1: " + args[0])
-        # await ctx.send(args)
+       # await ctx.send("argument 1: " + args[0])
+       # await ctx.send(args)
 
     @commands.command(name="reminders", help="push a reminder to firebase")
     async def reminder_push(self, ctx, *args):
@@ -136,11 +134,16 @@ class reminder_cog(commands.Cog):
     @commands.command(name="myreminders", aliases=["myr"], help="filler")
     async def retrieve(self, ctx):
         user_reminders = ref.child(f"{ctx.author.id}/{ctx.guild.id}").get()
-        print(user_reminders)
+
+        if not user_reminders: #if the dictionary of user reminders is empty
+            await ctx.send(f"{ctx.message.author.mention} you do not have any reminders!")
+            return
+
         message = f"Here are your reminders {ctx.message.author.mention}:"
         for key in user_reminders.keys():
             message += f"\n {user_reminders[key]}"
         await ctx.send(message)
+
 
         #print(ctx.guild.id)
         #print(reminder_object)
