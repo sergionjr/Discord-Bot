@@ -23,7 +23,7 @@ ref = db.reference('/Reminders (Test)')
 
 
 
-print("ref:", ref, type(ref))
+#print("ref:", ref, type(ref))
 
 
 dict_entry = """{
@@ -38,7 +38,7 @@ secondary_dict = {
 dict_entry = json.loads(dict_entry) #json loads must load a dictionary string. The triple quotes prep it.
 ref.push(secondary_dict)
 
-print(ref.get())
+#print(ref.get())
 
 
 
@@ -125,15 +125,18 @@ class reminder_cog(commands.Cog):
 
         #Hierarchy: "Reminders (Test)" / "UserID" / "Server ID" /"Reminder Dictionaries"
         #ref.child(<userid>/<reminderid>)
-        ref.child(f"{ctx.author.id}/{ctx.guild.id}").set(reminder.to_dictionary())
-        print(reminder)
+        ref.child(f"{ctx.author.id}/{ctx.guild.id}").push(reminder.to_dictionary())
+        #print(reminder)
 
     @commands.command(name="myreminders", aliases=["myr"], help="filler")
     async def retrieve(self, ctx):
         user_reminders = ref.child(f"{ctx.author.id}/{ctx.guild.id}").get()
-
-
+        print(user_reminders)
+        message = f"Here are your reminders {ctx.message.author.mention}:"
+        for key in user_reminders.keys():
+            message += f"\n {user_reminders[key]}"
         await ctx.send(message)
+
         #print(ctx.guild.id)
         #print(reminder_object)
         #print(type(reminder_object))
