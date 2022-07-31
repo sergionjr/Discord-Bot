@@ -22,6 +22,10 @@ default_app = firebase_admin.initialize_app(cred, {
 ref = db.reference('/Reminders (Test)')
 
 
+
+print("ref:", ref, type(ref))
+
+
 dict_entry = """{
 "reminderID": "reminderEntry"
 }"""
@@ -115,16 +119,18 @@ class reminder_cog(commands.Cog):
         reminder_id, server_id, user_id = args #sets them in order of how they are in the args[] structure.
         reminder = reminder_exo(reminder_id, server_id, user_id) #instantiates class
 
-        #Hierarchy: "Reminders (Test)" / "UserID" / "Reminder Dictionaries"
+        #Hierarchy: "Reminders (Test)" / "UserID" / "Server ID" /"Reminder Dictionaries"
         #ref.child(<userid>/<reminderid>)
-        ref.child("{}/{}".format(ctx.author.id, reminder_id))\
+        ref.child("{}/{}".format(ctx.author.id, ctx.guild.id))\
             .set(reminder.to_dictionary())
         print(reminder)
 
-    @commands.command(name="retrieve", help="filler")
+    @commands.command(name="retrieve", aliases=["ret"], help="filler")
     async def retrieve(self, ctx):
-        await ctx.send(str(ref.get()))
-
+        reminder_object = db.reference('/Reminders (Test)/{}'.format(ctx.author.id)).get()
+        print(ctx.guild.id)
+        print(reminder_object)
+        print(type(reminder_object))
 
     # @commands.Cog.listener()
     # async def on_message(self):
