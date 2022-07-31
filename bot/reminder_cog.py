@@ -23,6 +23,8 @@ ref = db.reference('/Reminders (Test)')
 
 
 
+
+
 #print("ref:", ref, type(ref))
 
 
@@ -38,7 +40,6 @@ secondary_dict = {
 dict_entry = json.loads(dict_entry) #json loads must load a dictionary string. The triple quotes prep it.
 ref.push(secondary_dict)
 
-#print(ref.get())
 
 
 
@@ -87,9 +88,12 @@ class reminder_cog(commands.Cog):
         await ctx.send("reminder_delete")
         return
 
-    async def reminder_clear(self, ctx, *args):
-        ref.child("{dis}/{}")
-        await ctx.send("{}: Your reminders have been cleared successfully.")
+    async def reminder_clear(self, ctx):
+        try:
+            await ref.child(f"{ctx.author.id}/{ctx.guild.id}").delete()
+            await ctx.send(f"{ctx.author.mention}: Your reminders have been cleared successfully.")
+        except:
+            await ctx.send(f"{ctx.author.mention}: Failed to clear your reminders")
         return
 
 
@@ -108,10 +112,11 @@ class reminder_cog(commands.Cog):
             'delete': self.reminder_delete,
             'clear': self.reminder_clear
         }
+
         try:
-            await reminder_operations[args[0]](ctx, args)
+            await reminder_operations[args[0]](ctx)
         except:
-            ctx.send("{}: Command not recognized.", ctx.message.author.mention)
+            await ctx.send(f"{ctx.message.author.mention}: Command not recognized.")
 
         # await ctx.send("argument 1: " + args[0])
         # await ctx.send(args)
