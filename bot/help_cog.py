@@ -8,7 +8,8 @@ class help_cog(commands.Cog):
         self.version = '(1.1.1)'
         self.help_message = """    
 ```
-(1.1.1): Mudbot will now STFU after the daily restart. Praise be to god
+*(1.1.1): Mudbot will now STFU after the daily restart. Praise be to god!*
+
 General commands:
 .help - displays all the available commands
 .play (or .p) <keywords> - finds the song on youtube and plays it in current channel
