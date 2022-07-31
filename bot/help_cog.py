@@ -5,9 +5,10 @@ from discord.ext import commands
 class help_cog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.version = '(1.1)'
+        self.version = '(1.1.1)'
         self.help_message = """    
 ```
+(1.1.1): Mudbot will now STFU after the daily restart. Praise be to god
 General commands:
 .help - displays all the available commands
 .play (or .p) <keywords> - finds the song on youtube and plays it in current channel
@@ -28,7 +29,7 @@ General commands:
             for channel in guild.text_channels:
                 self.text_channels.append(channel)
 
-        await self.send_to_first("Mud Cookie is **LIVE!!** " + self.version + self.help_message)
+        #await self.send_to_first("Mud Cookie is **LIVE!!** " + self.version + self.help_message)
 
     async def send_to_first(self, msg):
         primary_channel = self.text_channels[0]
