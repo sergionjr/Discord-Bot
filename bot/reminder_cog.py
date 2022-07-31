@@ -49,6 +49,19 @@ class reminder:
         self.recurring = recurring #true or false
         self.recurring_frequency = recurring_frequency
 
+class reminder_exo:
+    def __init__(self, reminder_id, server_id, user_id):
+        self.reminder_id = reminder_id
+        self.server_id = server_id
+        self.user_id = user_id
+
+    def jsonify(self):
+        return {
+            "reminder_id": self.reminder_id,
+            "server_id": self.server_id,
+            "user_id" : self.user_id
+        }
+
 
 
 class reminder_cog(commands.Cog):
@@ -98,7 +111,10 @@ class reminder_cog(commands.Cog):
     @commands.command(name="reminders", help="push a reminder to firebase")
     async def reminder_push(self, ctx, *args):
         await ctx.send("Args provided:" + " ".join(args))
-        print(args)
+        reminder_id, server_id, user_id = args
+        new_reminder = reminder_exo(reminder_id, server_id, user_id)
+        ref.child("testkey1").set(new_reminder.jsonify())
+        print(new_reminder)
 
     @commands.command(name="retrieve", help="filler")
     async def retrieve(self, ctx):
