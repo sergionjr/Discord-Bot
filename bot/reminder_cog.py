@@ -44,12 +44,11 @@ ref.push(secondary_dict)
 
 
 class reminder:
-    def __init__(self, reminder_id, server_id, user_ids, reminder, private, reminder_date, recurring, recurring_frequency):
-        self.reminder_id = reminder_id
+    def __init__(self, server_id, user_ids, reminder, reminder_date, recurring, recurring_frequency):
+
         self.server_id = server_id
         self.user_id = user_ids
         self.reminder = reminder
-        self.private = private
         self.reminder_date = reminder_date
         self.recurring = recurring #true or false
         self.recurring_frequency = recurring_frequency
