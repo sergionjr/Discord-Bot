@@ -87,8 +87,9 @@ class reminder_cog(commands.Cog):
         await ctx.send("reminder_delete")
         return
 
-    async def reminder_delete_all(self, ctx, *args):
-        await ctx.send("reminder_delete_all")
+    async def reminder_clear(self, ctx, *args):
+        ref.child("{dis}/{}")
+        await ctx.send("{}: Your reminders have been cleared successfully.")
         return
 
 
@@ -99,15 +100,18 @@ class reminder_cog(commands.Cog):
 
 
 
-    @commands.command(name="remind", aliases=["alert"], help="test test")
+    @commands.command(name="reminder", aliases=["alert"], help="test test")
     async def reminder(self, ctx, *args):
         reminder_operations = {
             'add': self.reminder_new,
             'modify': self.reminder_modify,
             'delete': self.reminder_delete,
-            'deleteall': self.reminder_delete_all
+            'clear': self.reminder_clear
         }
-        await reminder_operations[args[0]](ctx, args)
+        try:
+            await reminder_operations[args[0]](ctx, args)
+        except:
+            ctx.send("{}: Command not recognized.", ctx.message.author.mention)
 
         # await ctx.send("argument 1: " + args[0])
         # await ctx.send(args)
@@ -121,16 +125,18 @@ class reminder_cog(commands.Cog):
 
         #Hierarchy: "Reminders (Test)" / "UserID" / "Server ID" /"Reminder Dictionaries"
         #ref.child(<userid>/<reminderid>)
-        ref.child("{}/{}".format(ctx.author.id, ctx.guild.id))\
-            .set(reminder.to_dictionary())
+        ref.child(f"{ctx.author.id}/{ctx.guild.id}").set(reminder.to_dictionary())
         print(reminder)
 
-    @commands.command(name="retrieve", aliases=["ret"], help="filler")
+    @commands.command(name="myreminders", aliases=["myr"], help="filler")
     async def retrieve(self, ctx):
-        reminder_object = db.reference('/Reminders (Test)/{}'.format(ctx.author.id)).get()
-        print(ctx.guild.id)
-        print(reminder_object)
-        print(type(reminder_object))
+        user_reminders = ref.child(f"{ctx.author.id}/{ctx.guild.id}").get()
+
+
+        await ctx.send(message)
+        #print(ctx.guild.id)
+        #print(reminder_object)
+        #print(type(reminder_object))
 
     # @commands.Cog.listener()
     # async def on_message(self):
