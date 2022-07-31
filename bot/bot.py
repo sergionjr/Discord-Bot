@@ -18,8 +18,8 @@ from reminder_cog import reminder_cog
 TOKEN = os.environ['DEVELOPMENT_TOKEN']
 
 
-
-bot = commands.Bot(command_prefix=".")
+activity = discord.Activity(type=discord.ActivityType.listening, name="Mud Hut Radio")
+bot = commands.Bot(command_prefix=".", activity=activity)
 
 bot.remove_command("help")
 
@@ -29,8 +29,11 @@ bot.add_cog(reminder_cog(bot))
 
 bot.run(TOKEN)
 
+
+
 """
     mudbot is **LIVE!!** 
+    (1.1.1): Removed on_ready() listener message.
     (1.1.0): Added embed for song query when adding a song to a queue >1 in size. (thumbnail, song duration, video uploader, video link, discord user who requested.)
     (1.0.0): Official release and command integration: `help, play, queue, skip, clear, quit, pause, resume`
 

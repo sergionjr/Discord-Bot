@@ -25,6 +25,7 @@ ref = db.reference('/Reminders (Test)')
 
 
 
+
 #print("ref:", ref, type(ref))
 
 
@@ -37,8 +38,8 @@ secondary_dict = {
     'userID' : '155232'
 }
 
-dict_entry = json.loads(dict_entry) #json loads must load a dictionary string. The triple quotes prep it.
-ref.push(secondary_dict)
+#dict_entry = json.loads(dict_entry) #json loads must load a dictionary string. The triple quotes prep it.
+#ref.push(secondary_dict)
 
 
 
@@ -127,12 +128,12 @@ class reminder_cog(commands.Cog):
 
         #Hierarchy: "Reminders (Test)" / "UserID" / "Server ID" /"Reminder Dictionaries"
         #ref.child(<userid>/<reminderid>)
-        ref.child(f"{ctx.author.id}/{ctx.guild.id}").push(reminder.to_dictionary())
+        ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").push(reminder.to_dictionary())
         #print(reminder)
 
     @commands.command(name="myreminders", aliases=["myr"], help="filler")
     async def retrieve(self, ctx):
-        user_reminders = ref.child(f"{ctx.author.id}/{ctx.guild.id}").get()
+        user_reminders = ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").get()
 
         if not user_reminders: #if the dictionary of user reminders is empty
             await ctx.send(f"{ctx.message.author.mention} you do not have any reminders!")
@@ -144,11 +145,5 @@ class reminder_cog(commands.Cog):
         await ctx.send(message)
 
 
-        #print(ctx.guild.id)
-        #print(reminder_object)
-        #print(type(reminder_object))
 
-    # @commands.Cog.listener()
-    # async def on_message(self):
-    #     return
-
+    #@commands.Cog.description

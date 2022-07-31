@@ -5,7 +5,9 @@ from discord.ext import commands
 class help_cog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.version = '(1.1)'
+        self.version = '(1.1.1)'
+
+
         self.text_channels = []
         self.help_message = """    
 ```
