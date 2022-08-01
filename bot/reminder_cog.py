@@ -118,11 +118,13 @@ class reminder_cog(commands.Cog):
             await ctx.send(f"{ctx.message.author.mention} you do not have any reminders!")
             return
 
-        message = f"Here are your reminders {ctx.message.author.mention}: (Date | Description | Reminder ID"
-        n = 1
+        message = f"Here are your reminders {ctx.message.author.mention}: (Date | Description | Reminder ID)"
         for key in user_reminders.keys():
-            message += f"\n{n}) [{user_reminders[key]['date']}] | '{user_reminders[key]['description']}' | {key}"
-            n += 1
+            month_day = user_reminders[key]['date'][5:]
+            description = (user_reminders[key]['description'])
+
+            message += f"\n {month_day} | '{description}' | {key}"
+
         await ctx.send(message)
 
 #description, date, created_on, recurring, recurring frequency
