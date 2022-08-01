@@ -37,7 +37,7 @@ General commands:
         primary_channel = self.text_channels[0]
         await primary_channel.send(msg)
 
-    @commands.command(name="help", help="Displays all of the available bot commands")
+    @commands.command(name="bot", help="Displays all of the available bot commands")
     async def help(self, ctx):
         await ctx.send(self.help_message)
 

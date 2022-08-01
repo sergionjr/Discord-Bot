@@ -21,7 +21,7 @@ TOKEN = os.environ['DEVELOPMENT_TOKEN']
 activity = discord.Activity(type=discord.ActivityType.listening, name="Mud Hut Radio")
 bot = commands.Bot(command_prefix=".", activity=activity)
 
-bot.remove_command("help")
+#bot.remove_command("help")
 
 bot.add_cog(help_cog(bot))
 bot.add_cog(music_cog(bot))

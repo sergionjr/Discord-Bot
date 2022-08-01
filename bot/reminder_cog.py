@@ -20,9 +20,9 @@ default_app = firebase_admin.initialize_app(cred, {
 
 ref = db.reference('/Reminders (Test)')
 
-print(date.today() + datetime.timedelta(days=1))
+# print(date.today() + datetime.timedelta(days=1))
 
-print(type(date.today()))
+# print(type(date.today()))
 
 
 #dict_entry = json.loads(dict_entry) #json loads must load a dictionary string. The triple quotes prep it.
@@ -74,16 +74,23 @@ class reminder_cog(commands.Cog):
         await ctx.send("reminder_modify")
         return
 
-    async def reminder_delete(self, ctx, *args):
+    async def reminder_delete(self, ctx, args):
+        reminder_id = args[1]
+        print(len(args))
+        try:
+            ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}/{reminder_id}").delete()
+            await ctx.send(f"{ctx.author.mention}: Your reminder {reminder_id} has been removed successfully.")
+        except:
+            await ctx.send(f"{ctx.author.mention}: Failed to delete your reminder.")
         await ctx.send("reminder_delete")
         return
 
-    async def reminder_clear(self, ctx):
+    async def reminder_clear(self, ctx, args):
         try:
-            ref.child(f"{ctx.author.id}/{ctx.guild.id}").delete()
+            ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").delete()
             await ctx.send(f"{ctx.author.mention}: Your reminders have been cleared successfully.")
         except:
-            await ctx.send(f"{ctx.author.mention}: Failed to clear your reminders")
+            await ctx.send(f"{ctx.author.mention}: Failed to clear your reminders.")
         return
 
     @commands.command(name="reminder", aliases=["alert"], help="test test")
@@ -94,8 +101,10 @@ class reminder_cog(commands.Cog):
             'delete': self.reminder_delete,
             'clear': self.reminder_clear
         }
+        #print(reminder_operations['delete'](ctx, args))
         try:
-            await reminder_operations[args[0]](ctx)
+            #print(reminder_operations[args[0]])
+            await reminder_operations[args[0]](ctx, args)
         except:
             await ctx.send(f"{ctx.message.author.mention}: Command not recognized.")
 
@@ -114,12 +123,15 @@ class reminder_cog(commands.Cog):
     async def retrieve(self, ctx):
         user_reminders = ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").get()
 
-        if not user_reminders: #if the dictionary of user reminders is empty
+        # sorted_keys uses an inline function to return a list of the keys ordered by the nested 'date' key in each dictionary.
+        try:
+            sorted_keys = sorted(user_reminders, key=lambda x: (user_reminders[x]['date']))
+        except:
             await ctx.send(f"{ctx.message.author.mention} you do not have any reminders!")
             return
 
-        message = f"Here are your reminders {ctx.message.author.mention}: (Date | Description | Reminder ID)"
-        for key in user_reminders.keys():
+        message = f"Here are your reminders in this server {ctx.message.author.mention}: (Date | Description | Reminder ID)"
+        for key in sorted_keys:
             month_day = user_reminders[key]['date'][5:]
             description = (user_reminders[key]['description'])
 
