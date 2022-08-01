@@ -116,14 +116,13 @@ class reminder_cog(commands.Cog):
         reminder = reminder_exo(reminder_id, server_id, user_id) #instantiates class
 
         #Hierarchy: "Reminders (Test)" / "ServerName:ServerID" / "UserName:UserID" /"Reminder Dictionaries"
-        #ref.child(<userid>/<reminderid>)
         ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").push(reminder.to_dictionary())
 
     @commands.command(name="myreminders", aliases=["myr"], help="filler")
     async def retrieve(self, ctx):
         user_reminders = ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").get()
 
-        # sorted_keys uses an inline function to return a list of the keys ordered by the nested 'date' key in each dictionary.
+        # sorted_keys uses an inline function to return a list of the keys ordered by the nested {'date':'value'} key:value pair in each dictionary.
         try:
             sorted_keys = sorted(user_reminders, key=lambda x: (user_reminders[x]['date']))
         except:
@@ -132,14 +131,13 @@ class reminder_cog(commands.Cog):
 
         message = f"Here are your reminders in this server {ctx.message.author.mention}: (Date | Description | Reminder ID)"
         for key in sorted_keys:
-            month_day = user_reminders[key]['date'][5:]
+            month_day = user_reminders[key]['date'][5:] # 'MM-DD' extracted from 'YYYY-MM-DD'
             description = (user_reminders[key]['description'])
 
             message += f"\n {month_day} | '{description}' | {key}"
 
         await ctx.send(message)
 
-#description, date, created_on, recurring, recurring frequency
     @commands.command(name="populate", aliases=["pop"], help="filler")
     async def populate(self, ctx):
         reminder_1 = reminder(description = "New league prime capsule",
@@ -165,6 +163,3 @@ class reminder_cog(commands.Cog):
             ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").push(rem.to_dictionary())
 
         return
-
-
-    #@commands.Cog.description
