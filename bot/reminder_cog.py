@@ -10,7 +10,6 @@ from firebase_admin import credentials
 from firebase_admin import db
 from datetime import date
 
-
 serviceAccountKey = json.loads(os.environ['serviceAccountKey'])
 
 cred = credentials.Certificate(serviceAccountKey)
@@ -119,13 +118,14 @@ class reminder_cog(commands.Cog):
             await ctx.send(f"{ctx.message.author.mention} you do not have any reminders!")
             return
 
-        message = f"Here are your reminders {ctx.message.author.mention}:"
+        message = f"Here are your reminders {ctx.message.author.mention}: (Date | Description | Reminder ID"
         n = 1
         for key in user_reminders.keys():
-            message += f"\n {n}. Reminder Name: {user_reminders[key]['description']}, Reminder Date: {user_reminders[key]['date']} Reminder ID: {key}"
+            message += f"\n{n}) [{user_reminders[key]['date']}] | '{user_reminders[key]['description']}' | {key}"
             n += 1
         await ctx.send(message)
 
+#description, date, created_on, recurring, recurring frequency
     @commands.command(name="populate", aliases=["pop"], help="filler")
     async def populate(self, ctx):
         reminder_1 = reminder(description = "New league prime capsule",
