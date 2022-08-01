@@ -60,7 +60,6 @@ class reminder_exo:
         }
 
 
-
 class reminder_cog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -123,7 +122,7 @@ class reminder_cog(commands.Cog):
         message = f"Here are your reminders {ctx.message.author.mention}:"
         n = 1
         for key in user_reminders.keys():
-            message += f"\n {n}. Reminder ID: {key}, [date] {user_reminders[key]}"
+            message += f"\n {n}. Reminder Name: {user_reminders[key]['description']}, Reminder Date: {user_reminders[key]['date']} Reminder ID: {key}"
             n += 1
         await ctx.send(message)
 

@@ -81,7 +81,7 @@ class music_cog(commands.Cog):
         yt_video_link = "https://www.youtube.com/watch?v=" + yt_video_id
         link_yt_thumbnail = "https://img.youtube.com/vi/" + yt_video_id + "/mqdefault.jpg"
         minutes, seconds = divmod(song_info['song_duration'], 60)
-        song_duration = str(minutes) + ":" + str(seconds)
+        song_duration = str(minutes) + ":" + str(seconds).zfill(2)
         ## input: 150 seconds
         ## output: 2:30
         embed = discord.Embed(title=song_info['title'],
