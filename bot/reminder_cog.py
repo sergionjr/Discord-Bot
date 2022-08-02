@@ -15,7 +15,7 @@ serviceAccountKey = json.loads(os.environ['serviceAccountKey'])
 cred = credentials.Certificate(serviceAccountKey)
 
 default_app = firebase_admin.initialize_app(cred, {
-    'databaseURL': "https://mudbot-68f45-default-rtdb.firebaseio.com"
+    'databaseURL': os.environ['databaseURL']
 })
 
 ref = db.reference('/Reminders (Test)')
