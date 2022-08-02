@@ -45,18 +45,6 @@ class reminder:
             "recurring_frequency" : self.recurring_frequency
         }
 
-class reminder_exo:
-    def __init__(self, reminder_id, server_id, user_id):
-        self.reminder_id = reminder_id
-        self.server_id = server_id
-        self.user_id = user_id
-
-    def to_dictionary(self):
-        return {
-            "reminder_id": self.reminder_id,
-            "server_id": self.server_id,
-            "user_id" : self.user_id
-        }
 
 
 class reminder_cog(commands.Cog):
