@@ -124,9 +124,16 @@ class reminder_cog(commands.Cog):
                        f" .remindme [tomorrow] [description]```")
             return
         description = args[1]
-        date = {
-            'tomorrow': datetime.date.today() + 1
-        }
+        try:
+            date = {
+                'tomorrow': (datetime.date.today() + datetime.timedelta(1))
+                self.weekdays
+            }[args][0]
+        except:
+            await ctx.send(f"{ctx.author.mention} unrecognized date format")
+
+        reminder = self.reminder(
+            description=description)
 
 
 
