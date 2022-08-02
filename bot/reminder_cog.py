@@ -29,6 +29,14 @@ ref = db.reference('/Reminders (Test)')
 #ref.push(secondary_dict)
 
 class reminder:
+
+    weekdays = {'monday':0,
+                'tuesday':1,
+                'wednesday':2,
+                'thursday':3,
+                'friday':4,
+                'saturday':5,
+                'sunday':6}
     def __init__(self, description, date, created_on, recurring, recurring_frequency):
         self.description = description
         self.date = date
@@ -101,10 +109,26 @@ class reminder_cog(commands.Cog):
         await ctx.send("Args provided:" + " ".join(args)) #simple readback
 
         reminder_id, server_id, user_id = args #sets them in order of how they are in the args[] structure.
-        reminder = reminder_exo(reminder_id, server_id, user_id) #instantiates class
+       # reminder = reminder_exo(reminder_id, server_id, user_id) #instantiates class
 
         #Hierarchy: "Reminders (Test)" / "ServerName:ServerID" / "UserName:UserID" /"Reminder Dictionaries"
-        ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").push(reminder.to_dictionary())
+        #ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").push(reminder.to_dictionary())
+
+
+    @commands.command(name="remindme", help="Reminds user once at a specified date")
+    async def remindme(self, ctx, *args):
+        if len(args) > 2:
+            await ctx.send(f"{ctx.author.mention} ```"
+                       f" .remindme [MM-DD] [description] \n"
+                       f" .remindme [weekday] [description] \n"
+                       f" .remindme [tomorrow] [description]```")
+            return
+        description = args[1]
+        date = {
+            'tomorrow': datetime.date.today() + 1
+        }
+
+
 
     @commands.command(name="myreminders", aliases=["myr"], help="filler")
     async def retrieve(self, ctx):
