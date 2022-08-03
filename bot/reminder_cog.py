@@ -3,6 +3,7 @@ import firebase_admin
 import json
 import os
 import datetime
+import re
 
 # External
 from discord.ext import commands
@@ -30,13 +31,6 @@ ref = db.reference('/Reminders (Test)')
 
 class reminder:
 
-    weekdays = {'monday':0,
-                'tuesday':1,
-                'wednesday':2,
-                'thursday':3,
-                'friday':4,
-                'saturday':5,
-                'sunday':6}
     def __init__(self, description, date, created_on, recurring, recurring_frequency):
         self.description = description
         self.date = date
@@ -55,7 +49,24 @@ class reminder:
 
 
 
+class datetime_helper():
+
+    weekdays = {'monday': 0,
+                'tuesday': 1,
+                'wednesday': 2,
+                'thursday': 3,
+                'friday': 4,
+                'saturday': 5,
+                'sunday': 6}
+
+    def upcoming_weekday(self, date, weekday):
+        days_ahead = weekday - date.weekday()
+
+
+
+
 class reminder_cog(commands.Cog):
+
     def __init__(self, bot):
         self.bot = bot
         self.text_channel_text = []
@@ -72,13 +83,11 @@ class reminder_cog(commands.Cog):
 
     async def reminder_delete(self, ctx, args):
         reminder_id = args[1]
-        print(len(args))
         try:
             ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}/{reminder_id}").delete()
             await ctx.send(f"{ctx.author.mention}: Your reminder {reminder_id} has been removed successfully.")
         except:
             await ctx.send(f"{ctx.author.mention}: Failed to delete your reminder.")
-        await ctx.send("reminder_delete")
         return
 
     async def reminder_clear(self, ctx, args):
@@ -107,30 +116,50 @@ class reminder_cog(commands.Cog):
     @commands.command(name="reminders", help="push a reminder to firebase")
     async def reminder_push(self, ctx, *args):
         await ctx.send("Args provided:" + " ".join(args)) #simple readback
-
         reminder_id, server_id, user_id = args #sets them in order of how they are in the args[] structure.
        # reminder = reminder_exo(reminder_id, server_id, user_id) #instantiates class
 
         #Hierarchy: "Reminders (Test)" / "ServerName:ServerID" / "UserName:UserID" /"Reminder Dictionaries"
         #ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").push(reminder.to_dictionary())
-
+        return
 
     @commands.command(name="remindme", help="Reminds user once at a specified date")
     async def remindme(self, ctx, *args):
+        reminder_date = args[0].lower() # lowercases the date in case it uses weekday or tomorrow
+        description = args[1]
+
+        dth = datetime_helper()
+
         if len(args) > 2:
             await ctx.send(f"{ctx.author.mention} ```"
-                       f" .remindme [MM-DD] [description] \n"
+                       f" .remindme [MM-DD or MM/DD] [description] \n"
                        f" .remindme [weekday] [description] \n"
                        f" .remindme [tomorrow] [description]```")
             return
-        description = args[1]
+
+        #datetime processing
         try:
-            date = {
-                'tomorrow': (datetime.date.today() + datetime.timedelta(1))
-                self.weekdays
-            }[args][0]
+            if len(reminder_date) == 5: #if the date argument is 5
+                month, day = re.split(' /', reminder_date)
+                year = datetime.date.now().year
+                reminder_date = datetime.date(year, month, day)
+
+            elif reminder_date == 'tomorrow':
+                reminder_date = datetime.date.today() + datetime.timedelta(days=1)
+            else
+
         except:
             await ctx.send(f"{ctx.author.mention} unrecognized date format")
+
+
+        # date = {
+        #     'tomorrow': (datetime.date.today() + datetime.timedelta(days=1))
+        #
+        # }[reminder_date]
+
+
+
+        #################### datetime processing ^ ############################
 
         reminder = self.reminder(
             description=description)
