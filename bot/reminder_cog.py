@@ -91,7 +91,7 @@ class reminder_cog(commands.Cog):
             await ctx.send(f"{ctx.author.mention}: Failed to clear your reminders.")
         return
 
-    @commands.command(name="reminder", aliases=["alert"], help="test test")
+    @commands.command(name="reminder", aliases=["alert"], help=".reminder delete [reminderid] - deletes a reminder with id = reminderid\n .reminder clear - deletes all of your reminders on this server")
     async def reminder(self, ctx, *args):
         reminder_operations = {
             'add': self.reminder_new,
@@ -106,15 +106,15 @@ class reminder_cog(commands.Cog):
         except:
             await ctx.send(f"{ctx.message.author.mention}: Command not recognized.")
 
-    @commands.command(name="reminders", help="push a reminder to firebase")
-    async def reminder_push(self, ctx, *args):
-        await ctx.send("Args provided:" + " ".join(args)) #simple readback
-        reminder_id, server_id, user_id = args #sets them in order of how they are in the args[] structure.
-       # reminder = reminder_exo(reminder_id, server_id, user_id) #instantiates class
-
-        #Hierarchy: "Reminders (Test)" / "ServerName:ServerID" / "UserName:UserID" /"Reminder Dictionaries"
-        #ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").push(reminder.to_dictionary())
-        return
+    # @commands.command(name="reminders", help="push a reminder to firebase")
+    # async def reminder_push(self, ctx, *args):
+    #     await ctx.send("Args provided:" + " ".join(args)) #simple readback
+    #     reminder_id, server_id, user_id = args #sets them in order of how they are in the args[] structure.
+    #    # reminder = reminder_exo(reminder_id, server_id, user_id) #instantiates class
+    #
+    #     #Hierarchy: "Reminders (Test)" / "ServerName:ServerID" / "UserName:UserID" /"Reminder Dictionaries"
+    #     #ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").push(reminder.to_dictionary())
+    #     return
 
     @commands.command(name="remindme", help="Reminds user once at a specified date")
     async def remindme(self, ctx, *args):
@@ -233,15 +233,26 @@ class reminder_cog(commands.Cog):
 
             for user_userid in server_reminders:
                 #reminders for the users who have reminders in that server
-                user_reminders = ref.child(f"{server.name}:{server.id}/{user_userid}").get()
+                user, user_id = user_userid.split(":")
+
+                user_reminders = ref.child(f"{server.name}:{server.id}/{user}:{user_id}").get()
 
                 for key in user_reminders:
-                    #print("Dictionary date:", user_reminders[key]['date'], "Today's date:", date.today())
+
                     if user_reminders[key]['date'] == str(date.today()):
-                        await server.text_channels[0].send(user_reminders[key])
+                        try:
+                            user_entity = await self.bot.fetch_user(int(user_id)) #returns a discord.Member object
+                            await server.text_channels[0].send(f"{user_entity.mention} REMINDER: '{user_reminders[key]['description']}'")
+
+                            try:
+                                ref.child(f"{server.name}:{server.id}/{user}:{user_id}/{key}").delete()
+                            except Exception as Argument:
+                                await server.text_channels[0].send("Succesfully reminded user, but failed to delete the reminder afterwards ")
 
 
-            await server.text_channels[0].send("remind loop" + str(datetime.datetime.today()))
+                        except Exception as Argument:
+                            await server.text_channels[0].send(f"Error ocurred in trying to mention {user}:{user_id}")
+
 
     @commands.Cog.listener()
     async def on_ready(self):
