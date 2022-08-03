@@ -3,10 +3,10 @@ import firebase_admin
 import json
 import os
 import datetime
-import re
 
 # External
 from discord.ext import commands
+from discord.ext import tasks
 from firebase_admin import credentials
 from firebase_admin import db
 from datetime import date
@@ -21,15 +21,6 @@ default_app = firebase_admin.initialize_app(cred, {
 
 ref = db.reference('/Reminders (Test)')
 
-
-
-# print(date.today() + datetime.timedelta(days=1))
-
-# print(type(date.today()))
-
-
-#dict_entry = json.loads(dict_entry) #json loads must load a dictionary string. The triple quotes prep it.
-#ref.push(secondary_dict)
 
 class reminder:
 
@@ -50,8 +41,7 @@ class reminder:
         }
 
 
-
-class datetime_helper():
+class datetime_helper:
 
     weekdays = {'monday': 0,
                 'tuesday': 1,
@@ -60,7 +50,6 @@ class datetime_helper():
                 'friday': 4,
                 'saturday': 5,
                 'sunday': 6}
-
 
     def next_weekday(self, d, weekday):
         days_ahead = weekday - d.weekday()
@@ -139,7 +128,7 @@ class reminder_cog(commands.Cog):
         reminder_date = args[0].lower()  # lowercases the date in case it uses weekday or tomorrow
         description = " ".join(args[1:])
 
-        dth = datetime_helper()
+        dth = datetime_helper
 
         #datetime processing
         try:
@@ -233,3 +222,27 @@ class reminder_cog(commands.Cog):
             ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").push(rem.to_dictionary())
 
         return
+
+    @tasks.loop(hours=12)
+    async def check_for_reminders(self):
+       # reminders_list = ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").get()
+
+        for server in self.bot.guilds:
+            #reminders for that server
+            server_reminders = ref.child(f"{server.name}:{server.id}").get()
+
+            for user_userid in server_reminders:
+                #reminders for the users who have reminders in that server
+                user_reminders = ref.child(f"{server.name}:{server.id}/{user_userid}").get()
+
+                for key in user_reminders:
+                    #print("Dictionary date:", user_reminders[key]['date'], "Today's date:", date.today())
+                    if user_reminders[key]['date'] == str(date.today()):
+                        await server.text_channels[0].send(user_reminders[key])
+
+
+            await server.text_channels[0].send("remind loop" + str(datetime.datetime.today()))
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        self.check_for_reminders.start()
