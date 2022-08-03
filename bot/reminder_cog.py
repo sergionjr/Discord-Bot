@@ -129,8 +129,6 @@ class reminder_cog(commands.Cog):
 
     @commands.command(name="remindme", help="Reminds user once at a specified date")
     async def remindme(self, ctx, *args):
-
-
         if len(args) < 2:
             await ctx.send(f"{ctx.author.mention} ```"
                        f" .remindme [MM-DD or MM/DD] [description] \n"
@@ -139,15 +137,19 @@ class reminder_cog(commands.Cog):
             return
 
         reminder_date = args[0].lower()  # lowercases the date in case it uses weekday or tomorrow
-        description = args[1]
+        description = " ".join(args[1:])
 
         dth = datetime_helper()
 
         #datetime processing
         try:
-            if len(reminder_date) == 5: #if the date argument is 5
-                month, day = re.split(' /', reminder_date)
-                year = datetime.date.now().year
+            if len(reminder_date) == 5 or len(reminder_date) == 4: #if the date argument is MM-DD, MM/DD, 0M-DD, 0M/DD
+
+                month, day = reminder_date.replace('-', ' ').replace('/', ' ').split()
+                month, day = int(month), int(day)
+                year = datetime.date.today().year
+                #converting them all to ints
+
                 reminder_date = datetime.date(year, month, day)
 
             elif reminder_date == 'tomorrow':
@@ -160,15 +162,17 @@ class reminder_cog(commands.Cog):
             await ctx.send(f"{ctx.author.mention} unrecognized date format")
             return
 
-        r = self.reminder(
+
+        r = reminder(
             description=description,
             date=reminder_date,
             created_on=datetime.date.today(),
             recurring=False,
             recurring_frequency='none')
 
-        ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").push(r.to_dictionary())
 
+        ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").push(r.to_dictionary())
+        await ctx.send(f"{ctx.author.mention} You will be reminded {reminder_date} to '{description}'")
 
 
         # date = {
@@ -180,8 +184,7 @@ class reminder_cog(commands.Cog):
 
         #################### datetime processing ^ ############################
 
-        reminder = self.reminder(
-            description=description)
+
 
 
 
