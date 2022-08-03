@@ -21,6 +21,8 @@ default_app = firebase_admin.initialize_app(cred, {
 
 ref = db.reference('/Reminders (Test)')
 
+
+
 # print(date.today() + datetime.timedelta(days=1))
 
 # print(type(date.today()))
@@ -59,10 +61,12 @@ class datetime_helper():
                 'saturday': 5,
                 'sunday': 6}
 
-    def upcoming_weekday(self, date, weekday):
-        days_ahead = weekday - date.weekday()
 
-
+    def next_weekday(self, d, weekday):
+        days_ahead = weekday - d.weekday()
+        if days_ahead <= 0:
+            days_ahead += 7
+        return d + datetime.timedelta(days_ahead)
 
 
 class reminder_cog(commands.Cog):
@@ -125,17 +129,19 @@ class reminder_cog(commands.Cog):
 
     @commands.command(name="remindme", help="Reminds user once at a specified date")
     async def remindme(self, ctx, *args):
-        reminder_date = args[0].lower() # lowercases the date in case it uses weekday or tomorrow
-        description = args[1]
 
-        dth = datetime_helper()
 
-        if len(args) > 2:
+        if len(args) < 2:
             await ctx.send(f"{ctx.author.mention} ```"
                        f" .remindme [MM-DD or MM/DD] [description] \n"
                        f" .remindme [weekday] [description] \n"
                        f" .remindme [tomorrow] [description]```")
             return
+
+        reminder_date = args[0].lower()  # lowercases the date in case it uses weekday or tomorrow
+        description = args[1]
+
+        dth = datetime_helper()
 
         #datetime processing
         try:
@@ -146,10 +152,23 @@ class reminder_cog(commands.Cog):
 
             elif reminder_date == 'tomorrow':
                 reminder_date = datetime.date.today() + datetime.timedelta(days=1)
-            else
+            else:
+                weekday_value = dth.weekdays[reminder_date]
+                reminder_date = dth.next_weekday(date.today(), weekday_value)
 
         except:
             await ctx.send(f"{ctx.author.mention} unrecognized date format")
+            return
+
+        r = self.reminder(
+            description=description,
+            date=reminder_date,
+            created_on=datetime.date.today(),
+            recurring=False,
+            recurring_frequency='none')
+
+        ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").push(r.to_dictionary())
+
 
 
         # date = {
