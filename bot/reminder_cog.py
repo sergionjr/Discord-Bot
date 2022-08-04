@@ -213,15 +213,17 @@ class reminder_cog(commands.Cog):
     async def check_for_reminders(self):
        # reminders_list = ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").get()
 
-        for server in self.bot.guilds:
+        servers = ref.get()
+        for server in servers.keys():
+            server_name, server_id = server.split(":")
             #reminders for that server
-            server_reminders = ref.child(f"{server.name}:{server.id}").get()
+            server_reminders = ref.child(f"{server_name}:{server_id}").get()
 
             for user_userid in server_reminders:
                 #reminders for the users who have reminders in that server
-                user, user_id = user_userid.split(":")
+                user_name, user_id = user_userid.split(":")
 
-                user_reminders = ref.child(f"{server.name}:{server.id}/{user}:{user_id}").get()
+                user_reminders = ref.child(f"{server_name}:{server_id}/{user_name}:{user_id}").get()
 
                 for key in user_reminders:
 
@@ -231,7 +233,7 @@ class reminder_cog(commands.Cog):
                             await server.text_channels[0].send(f"{user_entity.mention} REMINDER: '{user_reminders[key]['description']}'")
 
                             try:
-                                ref.child(f"{server.name}:{server.id}/{user}:{user_id}/{key}").delete()
+                                ref.child(f"{server.name}:{server.id}/{user_name}:{user_id}/{key}").delete()
                             except Exception as Argument:
                                 await server.text_channels[0].send("Succesfully reminded user, but failed to delete the reminder afterwards ")
 
