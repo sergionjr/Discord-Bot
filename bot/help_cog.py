@@ -10,7 +10,7 @@ class help_cog(commands.Cog):
 
         self.text_channels = []
         self.help_message = """    
-*(1.2.0): Reminders are live! Check .help 
+**(1.2.0): Reminders are live! Check .help **
 *(1.1.1): Mudbot will now STFU after the daily restart. Praise be to god!*
 
 ```
