@@ -34,6 +34,7 @@ class music_cog(commands.Cog):
                 print(ydl.extract_info("ytsearch:%s" % item, download=False)['entries'][0])
             except Exception:
                 return False
+
         return {'channel':info['channel'],'title': info['title'], 'id': info['id'], 'song_duration':info['duration'], 'source': info['formats'][0]['url']}
 
     ## << ADD MORE TO SOURCE DICT FOR YOUTUBE DATA

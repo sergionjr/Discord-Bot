@@ -13,9 +13,10 @@ from discord.ext import commands
 from help_cog import help_cog
 from music_cog import music_cog
 from reminder_cog import reminder_cog
+from gimmick_cog import gimmick_cog
 
 
-TOKEN = os.environ['TOKEN']
+TOKEN = os.environ['DEVELOPMENT_TOKEN']
 
 bot = commands.Bot(command_prefix=".")
 
@@ -27,6 +28,7 @@ bot = commands.Bot(command_prefix=".", activity=activity)
 bot.add_cog(help_cog(bot))
 bot.add_cog(music_cog(bot))
 bot.add_cog(reminder_cog(bot))
+bot.add_cog(gimmick_cog(bot))
 
 bot.run(TOKEN)
 
