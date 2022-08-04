@@ -6,6 +6,9 @@ class help_cog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.version = '(1.1.1)'
+
+
+        self.text_channels = []
         self.help_message = """    
 ```
 *(1.1.1): Mudbot will now STFU after the daily restart. Praise be to god!*
@@ -22,7 +25,7 @@ General commands:
 ```
 """
 
-        self.text_channels = []
+
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -36,7 +39,7 @@ General commands:
         primary_channel = self.text_channels[0]
         await primary_channel.send(msg)
 
-    @commands.command(name="help", help="Displays all of the available bot commands")
+    @commands.command(name="bot", help="Displays all of the available bot commands")
     async def help(self, ctx):
         await ctx.send(self.help_message)
 

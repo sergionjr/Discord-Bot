@@ -11,17 +11,27 @@ class music_cog(commands.Cog):
         self.is_playing = False
         self.is_paused = False
 
-        self.music_queue = []
+
+
+        self.music_dict = {}
+        #self.music_dict = []
         self.YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'True', 'verbose':'true'}
         self.FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn -err_detect ignore_err'}
 
         self.vc = None
 
+    @commands.Cog.listener()
+    async def on_ready(self):
+        for guild in self.bot.guilds:
+            self.music_dict[guild.id] = []
+            self.is_playing = False
+            self.is_paused= False
+
     def search_yt(self, item):
         with YoutubeDL(self.YDL_OPTIONS) as ydl:
             try:
                 info = ydl.extract_info("ytsearch:%s" % item, download=False)['entries'][0]
-                #print(ydl.extract_info("ytsearch:%s" % item, download=False)['entries'][0])
+                print(ydl.extract_info("ytsearch:%s" % item, download=False)['entries'][0])
             except Exception:
                 return False
         return {'channel':info['channel'],'title': info['title'], 'id': info['id'], 'song_duration':info['duration'], 'source': info['formats'][0]['url']}
@@ -29,35 +39,38 @@ class music_cog(commands.Cog):
     ## << ADD MORE TO SOURCE DICT FOR YOUTUBE DATA
     # other dict entries... ['channel_url'], ['duration']
 
-    def play_next(self):
-        if len(self.music_queue) > 0:
+    def play_next(self, ctx):
+        if len(self.music_dict[ctx.guild.id]) > 0:
             self.is_playing = True
 
-            m_url = self.music_queue[0][0]['source']
+            m_url = self.music_dict[ctx.guild.id][0][0]['source']
 
-            self.music_queue.pop(0)
+            self.music_dict[ctx.guild.id].pop(0)
 
-            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next())
+            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next(ctx))
         else:
             self.is_playing = False
 
+
+
+
     async def play_music(self, ctx):
-        if len(self.music_queue) > 0:
+        if len(self.music_dict[ctx.guild.id]) > 0:
             self.is_playing = True
-            m_url = self.music_queue[0][0]['source']
+            m_url = self.music_dict[ctx.guild.id][0][0]['source']
 
             if (self.vc == None) or not self.vc.is_connected():
-                self.vc = await self.music_queue[0][1].connect()
+                self.vc = await self.music_dict[ctx.guild.id][0][1].connect()
 
                 if self.vc == None:
                     await ctx.send("**:x: Failed to join a voice channel**")
                     return
             else:
-                await self.vc.move_to(self.music_queue[0][1])
+                await self.vc.move_to(self.music_dict[ctx.guild.id][0][1])
 
-            self.music_queue.pop(0)
+            self.music_dict[ctx.guild.id].pop(0)
 
-            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next())
+            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next(ctx))
         else:
             self.is_playing = False
 
@@ -68,7 +81,7 @@ class music_cog(commands.Cog):
         yt_video_link = "https://www.youtube.com/watch?v=" + yt_video_id
         link_yt_thumbnail = "https://img.youtube.com/vi/" + yt_video_id + "/mqdefault.jpg"
         minutes, seconds = divmod(song_info['song_duration'], 60)
-        song_duration = str(minutes) + ":" + str(seconds)
+        song_duration = str(minutes) + ":" + str(seconds).zfill(2)
         ## input: 150 seconds
         ## output: 2:30
         embed = discord.Embed(title=song_info['title'],
@@ -80,7 +93,7 @@ class music_cog(commands.Cog):
         embed.add_field(name="Channel", value=song_info['channel'])
         embed.add_field(name="Song Duration", value=song_duration)
         embed.set_footer(text="Song has been added to the queue.")
-        #print(song_info)
+        print(song_info)
         #embed.set_thumbnail(url=)
         await ctx.send(embed=embed)
 
@@ -102,13 +115,14 @@ class music_cog(commands.Cog):
             searching_message = "**:musical_note: Searching :mag_right:** `" + query + "`"
             await ctx.send(searching_message)
             song = self.search_yt(query)
-            #print(song)
+            print(song)
 
             if type(song) == type(True):
                 await ctx.send("**Could not download the song. Try a different keyword**")
 
             else:
-                self.music_queue.append([song, voice_channel])
+                print(self.music_dict[ctx.guild.id])
+                self.music_dict[ctx.guild.id].append([song, voice_channel])
                 if self.is_playing == False:
                     message_nowplaying = "**Playing :notes: `" + song['title'] + "` - Now!**"
                     await ctx.send(message_nowplaying)
@@ -156,11 +170,11 @@ class music_cog(commands.Cog):
     async def queue(self, ctx):
         song_list = ""
 
-        for i in range(0, len(self.music_queue)):
+        for i in range(0, len(self.music_dict[ctx.guild.id])):
             if i > 7:
                 break
-            song_list += str(i+1) + ". " + self.music_queue[i][0]['title'] + '\n'
-        #print(song_list)
+            song_list += str(i+1) + ". " + self.music_dict[ctx.guild.id][i][0]['title'] + '\n'
+        print(song_list)
 
         if song_list != "":
             queue_message = "**" + song_list + "**"
@@ -172,7 +186,7 @@ class music_cog(commands.Cog):
     async def clear(self, ctx, *args):
         if (self.vc != None) and (self.is_playing):
             self.vc.stop()
-        self.music_queue = []
+        self.music_dict[ctx.guild.id] = []
         message_clear = "**:white_check_mark: Music queue has been cleared**"
         await ctx.send(message_clear)
 
