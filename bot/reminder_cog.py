@@ -116,7 +116,7 @@ class reminder_cog(commands.Cog):
     #     #ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").push(reminder.to_dictionary())
     #     return
 
-    @commands.command(name="remindme", help="Reminds user once at a specified date")
+    @commands.command(name="remindme", help="Reminds user at an upcoming weekday or MM-DD. ")
     async def remindme(self, ctx, *args):
         if len(args) < 2:
             await ctx.send(f"{ctx.author.mention} ```"
@@ -151,7 +151,6 @@ class reminder_cog(commands.Cog):
             await ctx.send(f"{ctx.author.mention} unrecognized date format")
             return
 
-
         r = reminder(
             description=description,
             date=reminder_date,
@@ -159,25 +158,12 @@ class reminder_cog(commands.Cog):
             recurring=False,
             recurring_frequency='none')
 
-
         ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").push(r.to_dictionary())
         await ctx.send(f"{ctx.author.mention} You will be reminded {reminder_date} to '{description}'")
-
-
-        # date = {
-        #     'tomorrow': (datetime.date.today() + datetime.timedelta(days=1))
-        #
-        # }[reminder_date]
-
-
-
         #################### datetime processing ^ ############################
 
 
-
-
-
-    @commands.command(name="myreminders", aliases=["myr"], help="filler")
+    @commands.command(name="myreminders", aliases=["myr"], help="Lists all of your upcoming reminders.")
     async def retrieve(self, ctx):
         user_reminders = ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").get()
 
