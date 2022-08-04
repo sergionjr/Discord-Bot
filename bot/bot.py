@@ -15,7 +15,7 @@ from music_cog import music_cog
 from reminder_cog import reminder_cog
 
 
-TOKEN = os.environ['TOKEN']
+TOKEN = os.environ['DEVELOPMENT_TOKEN']
 
 bot = commands.Bot(command_prefix=".")
 
