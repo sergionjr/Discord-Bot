@@ -15,8 +15,9 @@ from music_cog import music_cog
 from reminder_cog import reminder_cog
 
 
-TOKEN = os.environ['DEVELOPMENT_TOKEN']
+TOKEN = os.environ['TOKEN']
 
+bot = commands.Bot(command_prefix=".")
 
 activity = discord.Activity(type=discord.ActivityType.listening, name="Mud Hut Radio")
 bot = commands.Bot(command_prefix=".", activity=activity)
@@ -28,8 +29,6 @@ bot.add_cog(music_cog(bot))
 bot.add_cog(reminder_cog(bot))
 
 bot.run(TOKEN)
-
-
 
 """
     mudbot is **LIVE!!** 
