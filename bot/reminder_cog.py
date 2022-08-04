@@ -230,16 +230,18 @@ class reminder_cog(commands.Cog):
                     if user_reminders[key]['date'] == str(date.today()):
                         try:
                             user_entity = await self.bot.fetch_user(int(user_id)) #returns a discord.Member object
-                            await server.text_channels[0].send(f"{user_entity.mention} REMINDER: '{user_reminders[key]['description']}'")
+                            server_entity = self.bot.get_guild(int(server_id))
+
+                            await server_entity.text_channels[0].send(f"{user_entity.mention} REMINDER: '{user_reminders[key]['description']}'")
 
                             try:
-                                ref.child(f"{server.name}:{server.id}/{user_name}:{user_id}/{key}").delete()
+                                ref.child(f"{server_name}:{server_id}/{user_name}:{user_id}/{key}").delete()
                             except Exception as Argument:
-                                await server.text_channels[0].send("Succesfully reminded user, but failed to delete the reminder afterwards ")
+                                await server_entity.text_channels[0].send("Succesfully reminded user, but failed to delete the reminder afterwards ")
 
 
                         except Exception as Argument:
-                            await server.text_channels[0].send(f"Error ocurred in trying to mention {user}:{user_id}")
+                            await server_entity.text_channels[0].send(f"Error ocurred in trying to mention {user_name}:{user_id}")
 
 
     @commands.Cog.listener()
