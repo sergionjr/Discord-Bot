@@ -10,12 +10,17 @@ class help_cog(commands.Cog):
 
         self.text_channels = []
         self.help_message = """    
-**(1.3.0): Gimmicks are live! Check .help **
-*(1.2.0): Basic reminders have been added (.help)
-*(1.1.1): Mudbot will now STFU after the daily restart. Praise be to god!*
-
+** \(1.3.0): Gimmicks are live (magic 8 ball, roll the die)! Check .help **
+-------------------------------------------------------------------------------------
+```md
+Old update logs
+> *(1.2.0): Basic reminders have been added (.help)*
+> *(1.1.1): Mudbot will now STFU after the daily restart. Praise be to god!*
+> *(1.1.0): Music bot, cog added*
+> *(1.0.0): Initial bot deploy*
 ```
-Music player commands:
+```md
+1. Music Player commands:
 .help - displays all the available commands
 .play (or .p) <keywords> - finds the song on youtube and plays it in current channel
 .queue (or .q)  - displays the current music queue
@@ -25,19 +30,19 @@ Music player commands:
 .pause - pauses the current song being played or resumes if already paused
 .resume - resumes playing the current song
 
-Reminder commands:
-.remindme <MM-DD> <description>
-.remindme <MM/DD> <description>
-.remindme <weekdays: monday, tuesday ... sunday> <description>
-.remindme <tomorrow> <description> 
-.reminder delete <reminderid> - deletes reminder by id
-.reminder clear - deletes all of your reminders on this server
-.myreminders - lists all of your reminders
+2. Reminder  commands:
+ .remindme <MM-DD> <description>
+ .remindme <MM/DD> <description>
+ .remindme <weekdays: monday, tuesday, ... sunday> <description>
+ .remindme <tomorrow> <description> 
+ .reminder delete <reminderid> - deletes reminder by id
+ .reminder clear - deletes all of your reminders on this server
+ .myreminders - lists all of your reminders
 
-Gimmick commands:
-.magic8ball - ask the 8 ball a question
-.dice - rolls a random number between 1 and 6
-.roll [number1] [number2] - rolls a random number between these two values
+3. Gimmick commands:
+ .magic8ball - ask the 8 ball a question
+ .dice - rolls a random number between 1 and 6
+ .roll <number1> <number2> - rolls a random number between these two values
 ```
 """
 
