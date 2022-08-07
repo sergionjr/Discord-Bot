@@ -10,7 +10,8 @@ class help_cog(commands.Cog):
 
         self.text_channels = []
         self.help_message = """    
-**(1.2.0): Reminders are live! Check .help **
+**(1.3.0): Gimmicks are live! Check .help **
+*(1.2.0): Basic reminders have been added (.help)
 *(1.1.1): Mudbot will now STFU after the daily restart. Praise be to god!*
 
 ```
@@ -32,6 +33,11 @@ Reminder commands:
 .reminder delete <reminderid> - deletes reminder by id
 .reminder clear - deletes all of your reminders on this server
 .myreminders - lists all of your reminders
+
+Gimmick commands:
+.magic8ball - ask the 8 ball a question
+.dice - rolls a random number between 1 and 6
+.roll [number1] [number2] - rolls a random number between these two values
 ```
 """
 
