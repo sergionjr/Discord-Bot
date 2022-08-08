@@ -30,7 +30,8 @@ bot.add_cog(music_cog(bot))
 bot.add_cog(reminder_cog(bot))
 bot.add_cog(gimmick_cog(bot))
 
-bot.run(TOKEN)
+if __name__ == "__main__":
+    bot.run(TOKEN)
 
 """
     mudbot is **LIVE!!** 

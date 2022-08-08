@@ -183,31 +183,31 @@ class reminder_cog(commands.Cog):
 
         await ctx.send(message)
 
-    @commands.command(name="populate", aliases=["pop"], help="filler")
-    async def populate(self, ctx):
-        reminder_1 = reminder(description = "New league prime capsule",
-                              date = date(2022, 8, 30),
-                              created_on = datetime.date.today(),
-                              recurring = True,
-                              recurring_frequency = 'monthly')
-
-        reminder_2 = reminder(description = "Groceries",
-                              date = datetime.date(2022, 8, 2),
-                              created_on = datetime.date.today(),
-                              recurring = False,
-                              recurring_frequency = 'none')
-
-        reminder_3 = reminder(description = "Take the chicken out of the oven",
-                              date = date(2022, 9, 5),
-                              created_on = datetime.date.today(),
-                              recurring = True,
-                              recurring_frequency = 'weekly')
-        reminder_arr = [reminder_1, reminder_2, reminder_3]
-
-        for rem in reminder_arr:
-            ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").push(rem.to_dictionary())
-
-        return
+    # @commands.command(name="populate", aliases=["pop"], help="filler")
+    # async def populate(self, ctx):
+    #     reminder_1 = reminder(description = "New league prime capsule",
+    #                           date = date(2022, 8, 30),
+    #                           created_on = datetime.date.today(),
+    #                           recurring = True,
+    #                           recurring_frequency = 'monthly')
+    #
+    #     reminder_2 = reminder(description = "Groceries",
+    #                           date = datetime.date(2022, 8, 2),
+    #                           created_on = datetime.date.today(),
+    #                           recurring = False,
+    #                           recurring_frequency = 'none')
+    #
+    #     reminder_3 = reminder(description = "Take the chicken out of the oven",
+    #                           date = date(2022, 9, 5),
+    #                           created_on = datetime.date.today(),
+    #                           recurring = True,
+    #                           recurring_frequency = 'weekly')
+    #     reminder_arr = [reminder_1, reminder_2, reminder_3]
+    #
+    #     for rem in reminder_arr:
+    #         ref.child(f"{ctx.guild.name}:{ctx.guild.id}/{ctx.author.name}:{ctx.author.id}").push(rem.to_dictionary())
+    #
+    #     return
 
     @tasks.loop(hours=12)
     async def check_for_reminders(self):

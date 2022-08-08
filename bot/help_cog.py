@@ -5,18 +5,18 @@ from discord.ext import commands
 class help_cog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.version = '(1.1.1)'
+        self.version = '(1.3.0)'
 
 
         self.text_channels = []
         self.help_message = """    
-** \(1.3.0): Gimmicks are live (magic 8 ball, roll the die)! Check .help **
+** \(1.3.0): Gimmicks are live (magic 8 ball, roll dice)! Check .help **
 -------------------------------------------------------------------------------------
 ```md
 Old update logs
 > *(1.2.0): Basic reminders have been added (.help)*
 > *(1.1.1): Mudbot will now STFU after the daily restart. Praise be to god!*
-> *(1.1.0): Music bot, cog added*
+> *(1.1.0): Added embed for song queries when the list of songs > 1
 > *(1.0.0): Initial bot deploy*
 ```
 ```md
