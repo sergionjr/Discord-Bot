@@ -1,4 +1,4 @@
-# 🤖 MudBot: A Multi-Purpose Discord Bot (1.1.0)
+# 🤖 MudBot: A Multi-Purpose Discord Bot (1.2.0)
 
 MudBot was created primarily to be an assistant to my own discord needs. Discord music bots typically have inconvenient command syntaxes (p!play, p!, ;;play),
 so mudbot has aggregated the most simplistic features from the best bots into itself. Without a paywall separating the best bitrate, MudBot streams at the best quality,
@@ -10,7 +10,7 @@ minimizes spam in your server, and is regularly updated to be the simple jack-of
 
 - [X] Help Cog 
 
-- [ ] Reminders Cog (Create a reminder, recurring reminder)
+- [X] Reminders Cog (Create a reminder, recurring reminder)
 
 - [ ] Greetings Cog (User join, User level, User ranking)
 
