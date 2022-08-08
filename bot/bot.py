@@ -16,7 +16,8 @@ from reminder_cog import reminder_cog
 from gimmick_cog import gimmick_cog
 
 
-TOKEN = os.environ['DEVELOPMENT_TOKEN']
+TOKEN = os.environ['TOKEN']
+''' Personal Note: Token variable will be different depending on whether it's on the deployed repository or the local branch. local token = DEVELOPMENT_TOKEN, deployed token = LIVE_TOKEN'''
 
 bot = commands.Bot(command_prefix=".")
 
