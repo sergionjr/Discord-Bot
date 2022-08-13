@@ -1,7 +1,13 @@
 import discord
+import enum
 
 from discord.ext import commands
 from youtube_dl import YoutubeDL
+from enum import Enum, unique
+
+class MusicPlayerState(Enum):
+    IS_PLAYING = enum.auto()
+    IS_PAUSED = enum.auto()
 
 
 class music_cog(commands.Cog):
@@ -10,8 +16,6 @@ class music_cog(commands.Cog):
 
         self.is_playing = False
         self.is_paused = False
-
-
 
         self.music_dict = {}
         #self.music_dict = []
@@ -198,4 +202,31 @@ class music_cog(commands.Cog):
         message_quit = "**Disconnected Successfully. Until next time friend :eye: :lips: :eye: **"
         await self.vc.disconnect()
         await ctx.send(message_quit)
+
+    @commands.command(name="bypass_play", aliases=["byp", "pbypass"])
+    async def bypassplay(self, ctx, *args):
+        channel_number = int(args[0]) - 1
+        vc = ctx.guild.voice_channels[channel_number]
+        print(vc)
+
+        query = " ".join(args[1:])
+        if self.is_paused:
+            self.vc.resume()
+        else:
+            song = self.search_yt(query)
+            if type(song) == type(True):
+                await ctx.send("Could not download the song. Try a different keyword")
+            else:
+                self.music_dict[ctx.guild.id].append([song, vc])
+                if self.is_playing == False:
+                    message_nowplaying = "**Playing :notes: `" + song['title'] + "` - Now!**"
+                    await ctx.send(message_nowplaying)
+                    await self.play_music(ctx)
+
+                else:
+                    message_addedtoqueue = "** :white_check_mark: " + str(ctx.author) + " has added the song `" + song[
+                        'title'] + "` to queue.**"
+                    await ctx.send(message_addedtoqueue)
+                    await self.embed_youtube(ctx, song)
+
 
