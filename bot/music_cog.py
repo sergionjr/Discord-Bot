@@ -1,7 +1,13 @@
 import discord
+import enum
 
 from discord.ext import commands
 from youtube_dl import YoutubeDL
+from enum import Enum, unique
+
+class MusicPlayerState(Enum):
+    IS_PLAYING = enum.auto()
+    IS_PAUSED = enum.auto()
 
 
 class music_cog(commands.Cog):
@@ -10,8 +16,6 @@ class music_cog(commands.Cog):
 
         self.is_playing = False
         self.is_paused = False
-
-
 
         self.music_dict = {}
         #self.music_dict = []
