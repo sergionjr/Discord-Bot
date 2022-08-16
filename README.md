@@ -36,7 +36,7 @@ minimizes spam in your server, and is regularly updated to be the simple jack-of
 ```
 
 ### 🏃‍♂️How to run
-Download repository and install the required dependencies
+Clone repository and install the required dependencies
 
 `pip install PyNaCl`
 
